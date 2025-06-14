@@ -7,10 +7,9 @@ public class Main {
 	public static void main(String[] args) 
 	{
 		JFrame MainWindow = new JFrame();
-		MainPanelTest mainPanelTest = new MainPanelTest();
-		PrueferPanel prueferPanel = new PrueferPanel(mainPanelTest);
+		MainPanel MainPanel = new MainPanel();
 		MainWindow.setSize(900,600);
-		MainWindow.setContentPane(mainPanelTest);
+		MainWindow.setContentPane(MainPanel);
 		MainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		MainWindow.setVisible(true);
 	}
