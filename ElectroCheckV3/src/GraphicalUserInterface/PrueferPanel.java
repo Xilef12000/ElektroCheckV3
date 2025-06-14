@@ -62,7 +62,7 @@ public class PrueferPanel extends JPanel
         buttonPanel.add(einsehenButton);
         
         //ButtonPanel in HauptPanel einfügen
-        this.add(buttonPanel);
+        this.add(buttonPanel, BorderLayout.EAST);
         
         
         //Erstellen der ActionListener für die beiden Button
