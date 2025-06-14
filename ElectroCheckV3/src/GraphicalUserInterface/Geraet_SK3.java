@@ -1,9 +1,11 @@
 package GraphicalUserInterface;
 
-public class Geraet_SK3 {
+public class Geraet_SK3 extends Geraet 
+{
 
-	public Geraet_SK3() {
-		// TODO Auto-generated constructor stub
+	public Geraet_SK3() 
+	{
+		
 	}
 
 }
