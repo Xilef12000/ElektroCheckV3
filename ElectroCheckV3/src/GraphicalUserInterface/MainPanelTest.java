@@ -15,10 +15,10 @@ public class MainPanelTest extends JPanel
 		//Layout setzten
 		this.setLayout(new BorderLayout());
 		
-		Geraet geraet1 = new Geraet_SK1();
-		Geraet geraet2 = new Geraet_SK1();
-		Geraet geraet3 = new Geraet_SK1();
-		Geraet geraet4 = new Geraet_SK1();
+		Geraet geraet1 = new Geraet_SK1("test123", true, 365);;
+		Geraet geraet2 = new Geraet_SK1("test123", true, 365);;
+		Geraet geraet3 = new Geraet_SK1("test123", true, 365);;
+		Geraet geraet4 = new Geraet_SK1("test123", true, 365);;
 		
 		geraeteList.add(geraet1);
 		geraeteList.add(geraet2);

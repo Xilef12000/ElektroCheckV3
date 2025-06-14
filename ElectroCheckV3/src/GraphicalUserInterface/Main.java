@@ -12,6 +12,9 @@ public class Main {
 		MainWindow.setContentPane(MainPanel);
 		MainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		MainWindow.setVisible(true);
+		Geraet myGeraet = new Geraet_SK1("test123", true, 365);
+		myGeraet.print();
+		myGeraet.setPruefungNichtBestanden(Grund.values()[2]);
+		myGeraet.print();
 	}
-
 }
