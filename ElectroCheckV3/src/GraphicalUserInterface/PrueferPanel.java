@@ -57,6 +57,13 @@ public class PrueferPanel extends JPanel
         JButton einsehenButton = new JButton("Geraet einsehen");
         JButton pruefungDokButton = new JButton("Pruefung dokumentieren");
         
+        //Buttons in Panel einfügen
+        buttonPanel.add(pruefungDokButton);
+        buttonPanel.add(einsehenButton);
+        
+        //ButtonPanel in HauptPanel einfügen
+        this.add(buttonPanel);
+        
         
         //Erstellen der ActionListener für die beiden Button
         ActionListener einsehenAL = new ActionListener() 
