@@ -7,10 +7,10 @@ import java.util.List;
 
 public class PrueferPanel extends JPanel
 {
-	private MainPanelTest mainPanel;
+	private MainPanel mainPanel;
 	private JList<Geraet> geraetJList;
 
-	public PrueferPanel(MainPanelTest mainPanel) 
+	public PrueferPanel(MainPanel mainPanel) 
 	{
 		this.mainPanel = mainPanel;
 		
