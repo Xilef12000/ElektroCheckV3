@@ -16,6 +16,27 @@ public class MainPanel extends JPanel
 		//Layout setzten
 		this.setLayout(new BorderLayout());
 		
+		//Text im Startbildschirm
+		 // Panel mit BoxLayout für das Zentrum
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        this.add(centerPanel, BorderLayout.CENTER);
+        
+        //Textfelder erstellen und ins Centerpanel hinzufügen
+		JLabel startText = new JLabel("Wilkommen bei ElektroCheckV3");
+		startText.setFont(new Font("Arial", Font.BOLD, 18));
+		startText.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JLabel taetigeAuswahl = new JLabel("Bitte wählen Sie einen Benutzer aus!");
+		taetigeAuswahl.setFont(new Font("Arial", Font.PLAIN, 12));
+		taetigeAuswahl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		centerPanel.add(Box.createVerticalGlue());
+        centerPanel.add(startText);
+        centerPanel.add(Box.createVerticalStrut(10));
+        centerPanel.add(taetigeAuswahl);
+        centerPanel.add(Box.createVerticalGlue());
+
+		
 		//Menuebar erstellen
 		JMenuBar menuBar = new JMenuBar(); // Menüleiste)
 		menuBar.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -36,6 +57,7 @@ public class MainPanel extends JPanel
 	    pruefer.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) { 
+	    		MainPanel.this.remove(centerPanel);
 	    		PrueferPanel prueferPanel = new PrueferPanel(MainPanel.this);
 	    		MainPanel.this.add(prueferPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
@@ -47,6 +69,7 @@ public class MainPanel extends JPanel
 	    verwalter.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
+	    		MainPanel.this.remove(centerPanel);
 	    		VerwalterPanel verwalterPanel = new VerwalterPanel(MainPanel.this);
 	    		MainPanel.this.add(verwalterPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
@@ -60,7 +83,10 @@ public class MainPanel extends JPanel
 	    
 	}
 	
-	//Get für GeräteListe
+	
+	//Methoden
+	
+	//Getter für GeräteListe
     List<Geraet> getGeraeteListe(){
     	return this.geraeteList;
     }
