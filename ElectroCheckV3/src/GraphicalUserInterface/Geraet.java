@@ -47,9 +47,16 @@ public abstract class Geraet {
 		naechstepruefung = LocalDateTime.now().plusDays(tageBisAbgelaufen);
 		this.grund = null;
 	}
-	public void setPruefungNichtBestanden(Grund grund) {
+	public void setPruefungNichtBestanden(int grundi) {
 		pruefungBestanden = false;
 		naechstepruefung = LocalDateTime.now();
-		this.grund = grund;
+		this.grund = Grund.values()[grundi];
+	}
+	public List<String> getGruende(){
+		List<String> gruende = new ArrayList<>();
+		gruende.add("Grund1");
+		gruende.add("Grund2");
+		gruende.add("Grund3");
+		return gruende;
 	}
 }
