@@ -8,7 +8,7 @@ public class Geraet_SK1 extends Geraet
 	public Geraet_SK1(String name, Boolean pruefungBestanden, int tageBisAbgelaufen) 
 	{
 		// Constuctor der abstact superclass aufrufen
-		super(name, pruefungBestanden, tageBisAbgelaufen, "Schutzklasse I");
+		super(name, pruefungBestanden, tageBisAbgelaufen, "I");
 		
 		// zuweisen von 'grundeErlaubt'
 		// Elemente von 'grundeErlaubt' sind vom Datentyp/Klasse 'Grund'
