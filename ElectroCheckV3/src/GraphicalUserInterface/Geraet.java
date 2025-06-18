@@ -9,6 +9,7 @@ public abstract class Geraet {
 	private Boolean pruefungBestanden;
 	private LocalDateTime naechstepruefung;
 	private int tageBisAbgelaufen;
+	private String schutzklasse;
 	
 	// 'grund' vom Typ 'Grund' (Enum)
 	// kann alle möglichen Gründe annehmen, auch die die nicht zur SK passen
@@ -21,7 +22,7 @@ public abstract class Geraet {
 	
 	
 	// Konstruktor
-	public Geraet(String name, Boolean pruefungBestanden, int tageBisAbgelaufen) 
+	public Geraet(String name, Boolean pruefungBestanden, int tageBisAbgelaufen, String schutzklasse) 
 	{
 		this.name = name;
 		this.pruefungBestanden = pruefungBestanden;
@@ -29,6 +30,7 @@ public abstract class Geraet {
 		// setze 'naechstepruefung' auf Aktuelles Datum + 'tageBisAbgelaufen' Tage
 		this.naechstepruefung = LocalDateTime.now().plusDays(tageBisAbgelaufen);
 		this.grund = null;
+		this.schutzklasse = schutzklasse;
 	}
 	
 	public String getName() {
@@ -36,6 +38,9 @@ public abstract class Geraet {
 	}
 	public String toString() {
 		return name;
+	}
+	public String getSchutzklasse() {
+		return schutzklasse;
 	}
 	public Boolean getPruefungBestanden() {
 		return pruefungBestanden;
