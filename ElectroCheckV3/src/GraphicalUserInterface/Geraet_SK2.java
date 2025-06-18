@@ -4,6 +4,8 @@ import java.util.EnumSet;
 
 public class Geraet_SK2 extends Geraet 
 {
+	// Konstruktor für SK2
+	// Kommentare siehe SK1
 	public Geraet_SK2(String name, Boolean pruefungBestanden, int tageBisAbgelaufen) 
 	{
 		super(name, pruefungBestanden, tageBisAbgelaufen);
