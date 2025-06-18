@@ -9,6 +9,7 @@ public class PrueferPanel extends JPanel
 {
 	private MainPanel mainPanel;
 	private JList<Geraet> geraetJList;
+	private Geraet aktuellesGeraet;
 
 	public PrueferPanel(MainPanel mainPanel) 
 	{
@@ -50,6 +51,7 @@ public class PrueferPanel extends JPanel
 
         JScrollPane scrollPane = new JScrollPane(geraetJList);
         scrollPane.setPreferredSize(new Dimension(300, 200));
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
         JLabel gereateUebersicht = new JLabel("Geräte-Übersicht");
         gereateUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
@@ -57,6 +59,16 @@ public class PrueferPanel extends JPanel
         scrollPanePanel.add(gereateUebersicht, BorderLayout.NORTH);
         scrollPanePanel.add(scrollPane, BorderLayout.CENTER);
         this.add(scrollPanePanel, BorderLayout.WEST);
+        
+        //SelectionListener der ScrollPane um das ausgewählte Gerät zu aktuallisieren bei Auswahländerung
+        geraetJList.addListSelectionListener(e -> 
+        {
+            if (!e.getValueIsAdjusting()) 
+            {
+                aktuellesGeraet = geraetJList.getSelectedValue();
+            }
+        }
+        );
     }
 	
 	//Erstellen der ButtonBar zum Auswählen der gewünschten Aktion
@@ -65,13 +77,14 @@ public class PrueferPanel extends JPanel
         JPanel funktionsPanel = new JPanel();
         funktionsPanel.setLayout(new BorderLayout());
         funktionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        funktionsPanel.setPreferredSize(new Dimension(300, 200));
         
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(15, 1));
         
         //Buttons erstellen
-        JButton einsehenButton = new JButton("Geraet einsehen");
-        JButton pruefungDokButton = new JButton("Pruefung dokumentieren");
+        JButton einsehenButton = new JButton("Gerät einsehen");
+        JButton pruefungDokButton = new JButton("Prüfung dokumentieren");
         JButton programmBeenden = new JButton("Programm beenden");
         
         JLabel funktionen = new JLabel("Funktionen");
@@ -94,19 +107,17 @@ public class PrueferPanel extends JPanel
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                Geraet selected = geraetJList.getSelectedValue();
-                if (selected != null) 
+                if (aktuellesGeraet != null) 
                 {
-                   
+                	
                 } 
                 else 
                 {
-                	
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
                 }
 
             }
         };
-
         einsehenButton.addActionListener(einsehenAL);
         
         
@@ -114,35 +125,62 @@ public class PrueferPanel extends JPanel
         {
             @Override
             public void actionPerformed(ActionEvent e) 
-            {
-                Geraet selected = geraetJList.getSelectedValue();
-                if (selected != null) 
+            {                
+                if (aktuellesGeraet != null) 
                 {
-                   
+                	
                 } 
                 else 
                 {
-
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
                 }
 
             }
         };
-
         pruefungDokButton.addActionListener(pruefungDokAL);         
 	}
 	
 	//Panel zur Prüfungsdokumentation einzelner Geräte
 	void createPruefungDokPanel()
 	{
-		JPanel pruefungsPanel = new JPanel();
-		pruefungsPanel.setLayout(new BorderLayout());
-		pruefungsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		JPanel dokuPanel = new JPanel();
+		dokuPanel.setLayout(new BorderLayout());
+		dokuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		JLabel dokuUebersicht = new JLabel("Dokumentationsübersicht");
-		dokuUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		dokuUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));		
+		dokuPanel.add(dokuUebersicht, BorderLayout.NORTH);
 		
-		pruefungsPanel.add(dokuUebersicht, BorderLayout.NORTH);
+		//Internes Panel zur Funktionsimplementierung	
+		JPanel pruefungsPanel = new JPanel();
+		pruefungsPanel.setLayout(new GridLayout(20, 1));
+		pruefungsPanel.setBackground(Color.WHITE);
+		pruefungsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
-		this.add(pruefungsPanel, BorderLayout.CENTER);
+		String geraeteName = (aktuellesGeraet != null) ? aktuellesGeraet.getName() : "";
+		JLabel ausgewaehltesGeraet = new JLabel("Ausgewähltes Gerät: " + geraeteName);
+		ausgewaehltesGeraet.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		
+		//Panel für Dokumentation des Prüfstatus
+		JPanel pruefStatus = new JPanel();
+		pruefStatus.setLayout(new BorderLayout());
+		pruefStatus.setBackground(Color.WHITE);
+		
+		//Checkbox Prüfung bestanden
+		JCheckBox pruefBestanden = new JCheckBox("Prüfung bestanden");
+		pruefBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
+		pruefBestanden.setBackground(Color.WHITE);
+		pruefStatus.add(pruefBestanden, BorderLayout.WEST);
+		
+		//Checkbox Prüfung nicht bestanden
+		JCheckBox pruefNichtBestanden = new JCheckBox("Prüfung nicht bestanden");
+		pruefNichtBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
+		pruefNichtBestanden.setBackground(Color.WHITE);
+		pruefStatus.add(pruefNichtBestanden, BorderLayout.EAST);
+		
+		pruefungsPanel.add(ausgewaehltesGeraet);
+		pruefungsPanel.add(pruefStatus);
+		dokuPanel.add(pruefungsPanel, BorderLayout.CENTER);		
+		this.add(dokuPanel, BorderLayout.CENTER);
 	}
 }
