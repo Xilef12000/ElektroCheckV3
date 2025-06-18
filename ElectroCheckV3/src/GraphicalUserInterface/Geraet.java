@@ -2,6 +2,7 @@ package GraphicalUserInterface;
 
 import java.time.*;
 import java.util.*;
+import java.io.*;
 
 public abstract class Geraet {
 	private String name;
@@ -51,6 +52,14 @@ public abstract class Geraet {
 		else {
 			System.out.println(String.format("grund: %s", grund.toString()));
 		}
+	}
+	// Geräteinformationen in Textdatei exportieren.
+	public void drucken(PrintWriter printWriterinDatei) {
+		printWriterinDatei.println("Geraeteinformationen:");
+		printWriterinDatei.println("Geraetename: " + this.name);
+		printWriterinDatei.println("Status Pruefung: " + this.pruefungBestanden);
+		printWriterinDatei.println("Gueltigkeit Pruefung: " + this.tageBisAbgelaufen);
+		printWriterinDatei.println("Naechste Pruefung" + this.naechstepruefung);
 	}
 	public void setPruefungBestanden() {
 		// wenn Prüfung bestanden ist:
