@@ -8,6 +8,7 @@ public abstract class Geraet {
 	private Boolean pruefungBestanden;
 	private LocalDateTime naechstepruefung;
 	private int tageBisAbgelaufen;
+	protected EnumSet<Grund> grundeErlaubt;
 	private Grund grund;
 	
 	
@@ -17,7 +18,7 @@ public abstract class Geraet {
 		this.pruefungBestanden = pruefungBestanden;
 		this.tageBisAbgelaufen = tageBisAbgelaufen;
 		this.naechstepruefung = LocalDateTime.now().plusDays(tageBisAbgelaufen);
-		this.grund = null;
+		//this.grund = null;
 	}
 	
 	public String getName() {
@@ -50,13 +51,14 @@ public abstract class Geraet {
 	public void setPruefungNichtBestanden(int grundi) {
 		pruefungBestanden = false;
 		naechstepruefung = LocalDateTime.now();
-		this.grund = Grund.values()[grundi];
+		this.grund = new ArrayList<>(grundeErlaubt).get(grundi);
 	}
 	public List<String> getGruende(){
-		List<String> gruende = new ArrayList<>();
-		gruende.add("Grund1");
-		gruende.add("Grund2");
-		gruende.add("Grund3");
-		return gruende;
+		List<String> StrGruende = new ArrayList<>();
+		for (Iterator<Grund> iter = grundeErlaubt.iterator(); iter.hasNext(); ) {
+		    Grund element = iter.next();
+		    StrGruende.add(element.toString());
+		}
+		return StrGruende;
 	}
 }
