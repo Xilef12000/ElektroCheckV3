@@ -1,18 +1,15 @@
 package GraphicalUserInterface;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
 
 public class VerwalterPanel extends JPanel
 {
 	private MainPanel mainPanel;
 	private JList<Geraet> geraetJList;
+	private Geraet aktuellesGeraet;
 
 	public VerwalterPanel(MainPanel mainPanel) 
 	{
@@ -21,16 +18,23 @@ public class VerwalterPanel extends JPanel
 		//Definiere Layout
 		this.setLayout(new BorderLayout());
 				
-		//Menü-Leiste erstellen
+		//Geräteliste erstellen
 		createScrollPane();
 						
 		//Button-Leiste erstellen
 		createButtonBar();
+		
+		//Prüfungs-Panel erstellen
+		createPruefungDokPanel();
 	}
 	
 	//Erstellen einer Scrollbaren Anzeige für alle angelegten Geräte
 	private void createScrollPane() 
 	{
+		JPanel scrollPanePanel = new JPanel();
+		scrollPanePanel.setLayout(new BorderLayout());
+		scrollPanePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
         //Liste der Geräte aus MainPanel holen
         List<Geraet> geraete = mainPanel.getGeraeteListe();
 
@@ -47,26 +51,54 @@ public class VerwalterPanel extends JPanel
 
         JScrollPane scrollPane = new JScrollPane(geraetJList);
         scrollPane.setPreferredSize(new Dimension(300, 200));
-
-        this.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        
+        JLabel gereateUebersicht = new JLabel("Geräte-Übersicht");
+        gereateUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        
+        scrollPanePanel.add(gereateUebersicht, BorderLayout.NORTH);
+        scrollPanePanel.add(scrollPane, BorderLayout.CENTER);
+        this.add(scrollPanePanel, BorderLayout.WEST);
+        
+        //SelectionListener der ScrollPane um das ausgewählte Gerät zu aktuallisieren bei Auswahländerung
+        geraetJList.addListSelectionListener(e -> 
+        {
+            if (!e.getValueIsAdjusting()) 
+            {
+                aktuellesGeraet = geraetJList.getSelectedValue();
+            }
+        }
+        );
     }
 	
 	//Erstellen der ButtonBar zum Auswählen der gewünschten Aktion
 	private void createButtonBar() 
 	{
+        JPanel funktionsPanel = new JPanel();
+        funktionsPanel.setLayout(new BorderLayout());
+        funktionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        funktionsPanel.setPreferredSize(new Dimension(300, 200));
+        
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setLayout(new GridLayout(15, 1));
         
         //Buttons erstellen
-        JButton einsehenButton = new JButton("Geraet einsehen");
-        JButton pruefungDokButton = new JButton("Pruefung dokumentieren");
+        JButton einsehenButton = new JButton("Gerät einsehen");
+        JButton geraetAnlegen = new JButton("Gerät anlegen");
+        JButton geraetLoeschen = new JButton("Gerät löschen");
+        
+        JLabel funktionen = new JLabel("Funktionen");
+        funktionen.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
         
         //Buttons in Panel einfügen
-        buttonPanel.add(pruefungDokButton);
+        buttonPanel.add(geraetAnlegen);
         buttonPanel.add(einsehenButton);
+        buttonPanel.add(geraetLoeschen);
         
-        //ButtonPanel in HauptPanel einfügen
-        this.add(buttonPanel, BorderLayout.EAST);
+        funktionsPanel.add(funktionen, BorderLayout.NORTH);
+        funktionsPanel.add(buttonPanel, BorderLayout.CENTER);
+        
+        this.add(funktionsPanel, BorderLayout.EAST);
         
         
         //Erstellen der ActionListener für die beiden Button
@@ -75,40 +107,120 @@ public class VerwalterPanel extends JPanel
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                Geraet selected = geraetJList.getSelectedValue();
-                if (selected != null) 
+                if (aktuellesGeraet != null) 
                 {
-                   
+                	
                 } 
                 else 
                 {
-
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
                 }
 
             }
         };
-
         einsehenButton.addActionListener(einsehenAL);
         
         
-        ActionListener pruefungDokAL = new ActionListener() 
+        ActionListener geraetAnlegenAL = new ActionListener() 
         {
             @Override
             public void actionPerformed(ActionEvent e) 
-            {
-                Geraet selected = geraetJList.getSelectedValue();
-                if (selected != null) 
+            {                
+                if (aktuellesGeraet != null) 
                 {
-                   
+                	
                 } 
                 else 
                 {
-
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
                 }
 
             }
         };
+        geraetAnlegen.addActionListener(geraetAnlegenAL);
+        
+        
+        ActionListener geraetLoeschenAL = new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {                
+                if (aktuellesGeraet != null) 
+                {
+                	
+                } 
+                else 
+                {
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
+                }
 
-        pruefungDokButton.addActionListener(pruefungDokAL);         
+            }
+        };
+        geraetLoeschen.addActionListener(geraetLoeschenAL);
+	}
+	
+	//Panel zur Prüfungsdokumentation einzelner Geräte
+	void createPruefungDokPanel()
+	{
+		JPanel dokuPanel = new JPanel();
+		dokuPanel.setLayout(new BorderLayout());
+		dokuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
+		JLabel dokuUebersicht = new JLabel("Dokumentationsübersicht");
+		dokuUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));		
+		dokuPanel.add(dokuUebersicht, BorderLayout.NORTH);
+		
+		//Internes Panel zur Funktionsimplementierung	
+		JPanel pruefungsPanel = new JPanel();
+		pruefungsPanel.setLayout(new GridLayout(20, 1));
+		pruefungsPanel.setBackground(Color.WHITE);
+		pruefungsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		String geraeteName = (aktuellesGeraet != null) ? aktuellesGeraet.getName() : "";
+		JLabel ausgewaehltesGeraet = new JLabel("Ausgewähltes Gerät: " + geraeteName);
+		ausgewaehltesGeraet.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		ausgewaehltesGeraet.setFont(ausgewaehltesGeraet.getFont().deriveFont(18f));
+		
+		//Panel für Dokumentation des Prüfstatus
+		JPanel pruefStatus = new JPanel();
+		pruefStatus.setLayout(new BorderLayout());
+		pruefStatus.setBackground(Color.WHITE);
+		
+		//Checkbox Prüfung bestanden
+		JCheckBox pruefBestanden = new JCheckBox("Prüfung bestanden");
+		pruefBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
+		pruefBestanden.setBackground(Color.WHITE);
+		pruefBestanden.setFont(pruefBestanden.getFont().deriveFont(14f));
+		pruefStatus.add(pruefBestanden, BorderLayout.WEST);
+		
+		//Checkbox Prüfung nicht bestanden
+		JCheckBox pruefNichtBestanden = new JCheckBox("Prüfung nicht bestanden");
+		pruefNichtBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
+		pruefNichtBestanden.setBackground(Color.WHITE);
+		pruefNichtBestanden.setFont(pruefNichtBestanden.getFont().deriveFont(14f));
+		pruefNichtBestanden.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+		pruefStatus.add(pruefNichtBestanden, BorderLayout.CENTER);
+		
+		pruefungsPanel.add(ausgewaehltesGeraet);
+		pruefungsPanel.add(pruefStatus);
+		dokuPanel.add(pruefungsPanel, BorderLayout.CENTER);		
+		this.add(dokuPanel, BorderLayout.CENTER);
+		
+		
+		//ActionListener für die Checkboxen
+		ActionListener checkboxListener = e -> 
+		{
+		    Object source = e.getSource();
+		    if (source == pruefBestanden && pruefBestanden.isSelected()) 
+		    {
+		        pruefNichtBestanden.setSelected(false);
+		    } 
+		    else if (source == pruefNichtBestanden && pruefNichtBestanden.isSelected()) 
+		    {
+		        pruefBestanden.setSelected(false);
+		    }
+		};
+		pruefBestanden.addActionListener(checkboxListener);
+		pruefNichtBestanden.addActionListener(checkboxListener);
 	}
 }

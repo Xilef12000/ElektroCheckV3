@@ -85,7 +85,6 @@ public class PrueferPanel extends JPanel
         //Buttons erstellen
         JButton einsehenButton = new JButton("Gerät einsehen");
         JButton pruefungDokButton = new JButton("Prüfung dokumentieren");
-        JButton programmBeenden = new JButton("Programm beenden");
         
         JLabel funktionen = new JLabel("Funktionen");
         funktionen.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
@@ -93,7 +92,6 @@ public class PrueferPanel extends JPanel
         //Buttons in Panel einfügen
         buttonPanel.add(pruefungDokButton);
         buttonPanel.add(einsehenButton);
-        buttonPanel.add(programmBeenden);
         
         funktionsPanel.add(funktionen, BorderLayout.NORTH);
         funktionsPanel.add(buttonPanel, BorderLayout.CENTER);
@@ -162,6 +160,11 @@ public class PrueferPanel extends JPanel
 		ausgewaehltesGeraet.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 		ausgewaehltesGeraet.setFont(ausgewaehltesGeraet.getFont().deriveFont(18f));
 		
+		String geraeteSK = (aktuellesGeraet != null) ? aktuellesGeraet.getSchutzklasse() : "";
+		JLabel schutzklasse = new JLabel(geraeteSK);
+		schutzklasse.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		schutzklasse.setFont(schutzklasse.getFont().deriveFont(14f));
+		
 		//Panel für Dokumentation des Prüfstatus
 		JPanel pruefStatus = new JPanel();
 		pruefStatus.setLayout(new BorderLayout());
@@ -183,8 +186,25 @@ public class PrueferPanel extends JPanel
 		pruefStatus.add(pruefNichtBestanden, BorderLayout.CENTER);
 		
 		pruefungsPanel.add(ausgewaehltesGeraet);
+		pruefungsPanel.add(schutzklasse);
 		pruefungsPanel.add(pruefStatus);
 		dokuPanel.add(pruefungsPanel, BorderLayout.CENTER);		
 		this.add(dokuPanel, BorderLayout.CENTER);
+		
+		//ActionListener für die Checkboxen
+		ActionListener checkboxListener = e -> 
+		{
+			Object source = e.getSource();
+			if (source == pruefBestanden && pruefBestanden.isSelected()) 
+			{
+				pruefNichtBestanden.setSelected(false);
+			} 
+			else if (source == pruefNichtBestanden && pruefNichtBestanden.isSelected()) 
+			{
+				pruefBestanden.setSelected(false);
+			}
+		};
+		pruefBestanden.addActionListener(checkboxListener);
+		pruefNichtBestanden.addActionListener(checkboxListener);
 	}
 }
