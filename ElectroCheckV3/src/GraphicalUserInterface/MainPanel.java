@@ -42,7 +42,8 @@ public class MainPanel extends JPanel
 		menuBar.setFont(new Font("Arial", Font.PLAIN, 16));
 		this.add(menuBar, BorderLayout.NORTH);
 		
-		//Menuleiste erstellen
+		
+		//Benutzer als Menuebareintrag
 		JMenu benutzerMenu = new JMenu("Benutzer"); 
 		benutzerMenu.setBackground(Color.GRAY);
 		benutzerMenu.setForeground(Color.BLACK);
@@ -52,12 +53,20 @@ public class MainPanel extends JPanel
 	    //Eintrage der Menueleiste
 	    JMenuItem pruefer = new JMenuItem("Pruefer");
 	    JMenuItem verwalter = new JMenuItem("Verwalter");
+	    benutzerMenu.add(pruefer);
+	    benutzerMenu.add(verwalter);
 	    
-	    //Aktionlistener für die Menueeintraege
+	    //Aktionlistener für Pruefer
 	    pruefer.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) { 
-	    		MainPanel.this.remove(centerPanel);
+	    		//Aktuelles Panel in MainPanel BorderLayout(CENTER)
+	    		Component centerComp =  ((BorderLayout) MainPanel.this.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+	    		if (centerComp != null && centerComp instanceof JPanel) {
+	    	        JPanel deletePanel = (JPanel) centerComp;
+	    	        MainPanel.this.remove(deletePanel);
+	    	    }
+	    		//Center mit PrueferPanel überschreiben 
 	    		PrueferPanel prueferPanel = new PrueferPanel(MainPanel.this);
 	    		MainPanel.this.add(prueferPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
@@ -66,10 +75,16 @@ public class MainPanel extends JPanel
 	    }
 	    );
 	    
+	    //Aktionlistener für Verwalter
 	    verwalter.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
-	    		MainPanel.this.remove(centerPanel);
+	    		//Aktuelles Panel in MainPanel BorderLayout(CENTER)
+	    		Component centerComp =  ((BorderLayout) MainPanel.this.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+	    		if (centerComp != null && centerComp instanceof JPanel) {
+	    	        JPanel deletePanel = (JPanel) centerComp;
+	    	        MainPanel.this.remove(deletePanel);
+	    	    }
 	    		VerwalterPanel verwalterPanel = new VerwalterPanel(MainPanel.this);
 	    		MainPanel.this.add(verwalterPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
@@ -78,9 +93,75 @@ public class MainPanel extends JPanel
 	    }
 	    );
 	    
-	    benutzerMenu.add(pruefer);
-	    benutzerMenu.add(verwalter);
+	    //Datei als Menubareintrag
+		JMenu dateiMenu = new JMenu("Datei"); 
+		dateiMenu.setBackground(Color.GRAY);
+		dateiMenu.setForeground(Color.BLACK);
+		dateiMenu.setFont(new Font("Segoe UI", Font.BOLD, 16));
+		menuBar.add(dateiMenu);
 	    
+	    //Eintraege der Dateileiste
+	    JMenuItem importieren = new JMenuItem("Importieren Geräteliste");
+	    JMenuItem exportieren = new JMenuItem("Exportieren Geräteliste");
+	    dateiMenu.add(importieren);
+	    dateiMenu.add(exportieren);
+	  	    
+	  	//Aktionlistener für Importieren
+	    importieren.addActionListener(new ActionListener() {
+	    	@Override
+            public void actionPerformed(ActionEvent e) {
+	    	
+	    	}
+	    }
+	    );
+	    
+	    //Aktionlistener für Exportieren
+	    exportieren.addActionListener(new ActionListener() {
+	    	@Override
+            public void actionPerformed(ActionEvent e) {
+	    		
+	    	}
+	    }
+	    );
+
+	    //About als Menubareintrag
+  		JMenu aboutMenu = new JMenu("About"); 
+  		aboutMenu.setBackground(Color.GRAY);
+  		aboutMenu.setForeground(Color.BLACK);
+  		aboutMenu.setFont(new Font("Segoe UI", Font.BOLD, 16));
+  		menuBar.add(aboutMenu);
+  	    
+  	    //Eintrage der Aboutleiste
+  	    JMenuItem aboutUs = new JMenuItem("About Us");
+  	    JMenuItem aboutSoftware = new JMenuItem("About Software");
+  	    aboutMenu.add(aboutUs);
+  	    aboutMenu.add(aboutSoftware);
+  	    
+  	    //Aktionlistener für aboutUs
+	    aboutUs.addActionListener(new ActionListener() {
+	    	@Override
+            public void actionPerformed(ActionEvent e) {
+	    		JOptionPane.showMessageDialog(null, "Gruppe: \nN. Bachmann \nV. Bahatyani \nM. Baron \nM. König \nN.Weigold");
+	    	}
+	    }
+	    );
+	    
+	    //Aktionlistener für aboutSoftware
+	    aboutSoftware.addActionListener(new ActionListener() {
+	    	@Override
+            public void actionPerformed(ActionEvent e) {
+	    		
+	    	}
+	    }
+	    );
+
+	    //Programm beenden als Menubareintrag
+  		JMenuItem programmBeenden = new JMenuItem("Programm beenden"); 
+  		programmBeenden.setForeground(Color.BLACK);
+  		programmBeenden.setFont(new Font("Segoe UI", Font.BOLD, 16));
+  		programmBeenden.addActionListener(e -> System.exit(0)); 
+  		menuBar.add(programmBeenden);
+
 	}
 	
 	
