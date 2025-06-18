@@ -7,7 +7,7 @@ public class FullScreenFrame extends JFrame
 {
     public FullScreenFrame() 
     {
-        super("Vollbild ohne Taskleiste");
+        super("ElektroCheckV3");
 
         // Bildschirmgröße und Insets (Taskleiste etc.) ermitteln
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

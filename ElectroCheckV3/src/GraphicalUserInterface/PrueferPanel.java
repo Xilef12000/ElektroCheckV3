@@ -160,6 +160,7 @@ public class PrueferPanel extends JPanel
 		String geraeteName = (aktuellesGeraet != null) ? aktuellesGeraet.getName() : "";
 		JLabel ausgewaehltesGeraet = new JLabel("Ausgewähltes Gerät: " + geraeteName);
 		ausgewaehltesGeraet.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		ausgewaehltesGeraet.setFont(ausgewaehltesGeraet.getFont().deriveFont(18f));
 		
 		//Panel für Dokumentation des Prüfstatus
 		JPanel pruefStatus = new JPanel();
@@ -170,13 +171,16 @@ public class PrueferPanel extends JPanel
 		JCheckBox pruefBestanden = new JCheckBox("Prüfung bestanden");
 		pruefBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
 		pruefBestanden.setBackground(Color.WHITE);
+		pruefBestanden.setFont(pruefBestanden.getFont().deriveFont(14f));
 		pruefStatus.add(pruefBestanden, BorderLayout.WEST);
 		
 		//Checkbox Prüfung nicht bestanden
 		JCheckBox pruefNichtBestanden = new JCheckBox("Prüfung nicht bestanden");
 		pruefNichtBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
 		pruefNichtBestanden.setBackground(Color.WHITE);
-		pruefStatus.add(pruefNichtBestanden, BorderLayout.EAST);
+		pruefNichtBestanden.setFont(pruefNichtBestanden.getFont().deriveFont(14f));
+		pruefNichtBestanden.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+		pruefStatus.add(pruefNichtBestanden, BorderLayout.CENTER);
 		
 		pruefungsPanel.add(ausgewaehltesGeraet);
 		pruefungsPanel.add(pruefStatus);
