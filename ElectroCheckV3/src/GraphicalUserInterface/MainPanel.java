@@ -47,7 +47,7 @@ public class MainPanel extends JPanel
 	    verwalter.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
-	    		VerwalterPanel verwalterPanel = new VerwalterPanel();
+	    		VerwalterPanel verwalterPanel = new VerwalterPanel(MainPanel.this);
 	    		MainPanel.this.add(verwalterPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
 	    	    MainPanel.this.repaint();
