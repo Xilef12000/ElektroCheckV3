@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 
 public class MainPanel extends JPanel
 {
-	List<Geraet> geraeteList = new ArrayList<>();
+	private List<Geraet> geraeteList = new ArrayList<>();
 	
 	public MainPanel() 
 	{
@@ -177,7 +177,10 @@ public class MainPanel extends JPanel
 		geraeteList.add(geraet);
 		System.out.println(geraeteList);
     }
-    
+	protected void removeGeraet(Geraet geraet){
+		geraeteList.remove(geraet);
+		System.out.println(geraeteList);
+    }
     
     
 }
