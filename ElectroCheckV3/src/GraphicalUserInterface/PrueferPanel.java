@@ -10,6 +10,7 @@ public class PrueferPanel extends JPanel
 	private MainPanel mainPanel;
 	private JList<Geraet> geraetJList;
 	private Geraet aktuellesGeraet;
+	private JPanel statusPanel;
 
 	public PrueferPanel(MainPanel mainPanel) 
 	{
@@ -83,15 +84,15 @@ public class PrueferPanel extends JPanel
         buttonPanel.setLayout(new GridLayout(15, 1));
         
         //Buttons erstellen
-        JButton einsehenButton = new JButton("Gerät einsehen");
-        JButton pruefungDokButton = new JButton("Prüfung dokumentieren");
+        JButton druckenButton = new JButton("Gerätedaten drucken");
+        JButton pruefungDokButton = new JButton("Geräteprüfung dokumentieren");
         
         JLabel funktionen = new JLabel("Funktionen");
         funktionen.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
         
         //Buttons in Panel einfügen
         buttonPanel.add(pruefungDokButton);
-        buttonPanel.add(einsehenButton);
+        buttonPanel.add(druckenButton);
         
         funktionsPanel.add(funktionen, BorderLayout.NORTH);
         funktionsPanel.add(buttonPanel, BorderLayout.CENTER);
@@ -100,7 +101,7 @@ public class PrueferPanel extends JPanel
         
         
         //Erstellen der ActionListener für die beiden Button
-        ActionListener einsehenAL = new ActionListener() 
+        ActionListener druckenButtonAL = new ActionListener() 
         {
             @Override
             public void actionPerformed(ActionEvent e) 
@@ -116,7 +117,7 @@ public class PrueferPanel extends JPanel
 
             }
         };
-        einsehenButton.addActionListener(einsehenAL);
+        druckenButton.addActionListener(druckenButtonAL);
         
         
         ActionListener pruefungDokAL = new ActionListener() 
@@ -139,72 +140,183 @@ public class PrueferPanel extends JPanel
 	}
 	
 	//Panel zur Prüfungsdokumentation einzelner Geräte
-	void createPruefungDokPanel()
+	void createPruefungDokPanel() 
 	{
-		JPanel dokuPanel = new JPanel();
-		dokuPanel.setLayout(new BorderLayout());
-		dokuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		
-		JLabel dokuUebersicht = new JLabel("Dokumentationsübersicht");
-		dokuUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));		
-		dokuPanel.add(dokuUebersicht, BorderLayout.NORTH);
-		
-		//Internes Panel zur Funktionsimplementierung	
-		JPanel pruefungsPanel = new JPanel();
-		pruefungsPanel.setLayout(new GridLayout(20, 1));
-		pruefungsPanel.setBackground(Color.WHITE);
-		pruefungsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		
-		String geraeteName = (aktuellesGeraet != null) ? aktuellesGeraet.getName() : "";
-		JLabel ausgewaehltesGeraet = new JLabel("Ausgewähltes Gerät: " + geraeteName);
-		ausgewaehltesGeraet.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-		ausgewaehltesGeraet.setFont(ausgewaehltesGeraet.getFont().deriveFont(18f));
-		
-		String geraeteSK = (aktuellesGeraet != null) ? aktuellesGeraet.getSchutzklasse() : "";
-		JLabel schutzklasse = new JLabel(geraeteSK);
-		schutzklasse.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-		schutzklasse.setFont(schutzklasse.getFont().deriveFont(14f));
-		
-		//Panel für Dokumentation des Prüfstatus
-		JPanel pruefStatus = new JPanel();
-		pruefStatus.setLayout(new BorderLayout());
-		pruefStatus.setBackground(Color.WHITE);
-		
-		//Checkbox Prüfung bestanden
-		JCheckBox pruefBestanden = new JCheckBox("Prüfung bestanden");
-		pruefBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
-		pruefBestanden.setBackground(Color.WHITE);
-		pruefBestanden.setFont(pruefBestanden.getFont().deriveFont(14f));
-		pruefStatus.add(pruefBestanden, BorderLayout.WEST);
-		
-		//Checkbox Prüfung nicht bestanden
-		JCheckBox pruefNichtBestanden = new JCheckBox("Prüfung nicht bestanden");
-		pruefNichtBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
-		pruefNichtBestanden.setBackground(Color.WHITE);
-		pruefNichtBestanden.setFont(pruefNichtBestanden.getFont().deriveFont(14f));
-		pruefNichtBestanden.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-		pruefStatus.add(pruefNichtBestanden, BorderLayout.CENTER);
-		
-		pruefungsPanel.add(ausgewaehltesGeraet);
-		pruefungsPanel.add(schutzklasse);
-		pruefungsPanel.add(pruefStatus);
-		dokuPanel.add(pruefungsPanel, BorderLayout.CENTER);		
-		this.add(dokuPanel, BorderLayout.CENTER);
-		
-		//ActionListener für die Checkboxen
-		ActionListener checkboxListener = e -> 
-		{
-			Object source = e.getSource();
-			if (source == pruefBestanden && pruefBestanden.isSelected()) 
-			{
-				pruefNichtBestanden.setSelected(false);
-			} 
-			else if (source == pruefNichtBestanden && pruefNichtBestanden.isSelected()) 
-			{
-				pruefBestanden.setSelected(false);
-			}
-		};
-		pruefBestanden.addActionListener(checkboxListener);
-		pruefNichtBestanden.addActionListener(checkboxListener);
+	    JPanel dokuPanel = new JPanel();
+	    dokuPanel.setLayout(new BorderLayout());
+	    dokuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+	    JLabel dokuUebersicht = new JLabel("Dokumentationsübersicht");
+	    dokuUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+	    dokuPanel.add(dokuUebersicht, BorderLayout.NORTH);
+
+	    //Hauptbereich für Prüfungsinformationen
+	    JPanel pruefungsPanel = new JPanel();
+	    pruefungsPanel.setLayout(new BoxLayout(pruefungsPanel, BoxLayout.Y_AXIS));
+	    pruefungsPanel.setBackground(Color.WHITE);
+
+	    //Geräteinfo
+	    JPanel geraetInfoPanel = new JPanel();
+	    geraetInfoPanel.setLayout(new BoxLayout(geraetInfoPanel, BoxLayout.Y_AXIS));
+	    geraetInfoPanel.setBackground(Color.WHITE);
+
+	    JLabel ausgewaehltesGeraet = new JLabel("Ausgewähltes Gerät: " + 
+	        (aktuellesGeraet != null ? aktuellesGeraet.getName() : "Keins ausgewählt"));
+	    
+	    JLabel schutzklasse = new JLabel("Geräteschutzklasse: " + 
+	        (aktuellesGeraet != null ? aktuellesGeraet.getSchutzklasse() : "Unbekannt"));
+
+	    ausgewaehltesGeraet.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    schutzklasse.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	    ausgewaehltesGeraet.setMaximumSize(new Dimension(Integer.MAX_VALUE, ausgewaehltesGeraet.getPreferredSize().height));
+	    schutzklasse.setMaximumSize(new Dimension(Integer.MAX_VALUE, schutzklasse.getPreferredSize().height));
+
+	    geraetInfoPanel.add(ausgewaehltesGeraet);
+	    geraetInfoPanel.add(schutzklasse); 
+	    geraetInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	    JPanel geraetInfoWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	    geraetInfoWrapper.setBackground(Color.WHITE);
+	    geraetInfoWrapper.add(geraetInfoPanel);
+	    
+	    //Prüfstatus Panel
+	    JPanel pruefStatus = new JPanel();
+	    pruefStatus.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    pruefStatus.setBackground(Color.WHITE);
+	    JCheckBox pruefBestanden = new JCheckBox("Prüfung bestanden");
+	    JCheckBox pruefNichtBestanden = new JCheckBox("Prüfung nicht bestanden");
+
+	    pruefBestanden.setBackground(Color.WHITE);
+	    pruefNichtBestanden.setBackground(Color.WHITE);
+
+	    pruefStatus.add(pruefBestanden);
+	    pruefStatus.add(pruefNichtBestanden);
+
+	    //Statusbereich für dynamische Inhalte
+	    this.statusPanel = new JPanel();
+	    statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
+	    statusPanel.setBackground(Color.WHITE);
+	    
+	    JPanel platzhalter = new JPanel();
+	    platzhalter.setLayout(new BorderLayout());
+	    platzhalter.setBackground(Color.WHITE);
+	    
+	    statusPanel.add(platzhalter);
+
+	    //Hinzufügen aller Komponenten
+	    pruefungsPanel.add(geraetInfoWrapper);
+	    pruefungsPanel.add(pruefStatus);
+	    pruefungsPanel.add(Box.createRigidArea(new Dimension(0,10)));
+	    pruefungsPanel.add(statusPanel);
+
+	    dokuPanel.add(pruefungsPanel, BorderLayout.CENTER);
+	    this.add(dokuPanel, BorderLayout.CENTER);
+
+	    // Listener
+	    ActionListener checkboxListener = e -> 
+	    {
+	        if (aktuellesGeraet == null) 
+	        {
+	            JOptionPane.showMessageDialog(null, "Bitte erst ein Gerät auswählen.");
+	            pruefBestanden.setSelected(false);
+	            pruefNichtBestanden.setSelected(false);
+	            return;
+	        }
+
+	        if (e.getSource() == pruefBestanden) 
+	        {
+	            pruefNichtBestanden.setSelected(false);
+	            createBestandenPanel();
+	        } 
+	        else 
+	        {
+	            pruefBestanden.setSelected(false);
+	            createNichtBestandenPanel();
+	        }
+	    };
+	    pruefBestanden.addActionListener(checkboxListener);
+	    pruefNichtBestanden.addActionListener(checkboxListener);
+	}
+	
+	//Panel wenn Prüfung bestanden
+	void createBestandenPanel()
+	{
+	    this.statusPanel.removeAll();
+	    
+	    JPanel gesamtPanel = new JPanel();
+	    gesamtPanel.setLayout(new BorderLayout(10, 10));
+	    gesamtPanel.setBackground(Color.WHITE);
+
+	    JPanel pruefBestandenPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+	    pruefBestandenPanel.setBackground(Color.WHITE);
+	    pruefBestandenPanel.setPreferredSize(new Dimension(400, 150));
+	    pruefBestandenPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+	    pruefBestandenPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+	    List<String> gruende = this.aktuellesGeraet.getGruende();
+
+	    for (String grund : gruende)
+	    {
+	        JPanel zeile = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	        zeile.setBackground(Color.WHITE);
+
+	        JLabel grundLabel = new JLabel(grund);
+	        JLabel hakenLabel = new JLabel("\u2705");
+
+	        zeile.add(grundLabel);
+	        zeile.add(hakenLabel);
+	        pruefBestandenPanel.add(zeile);
+	    }
+	    
+	    JPanel platzhalter = new JPanel(new BorderLayout());
+	    platzhalter.setBackground(Color.WHITE);
+	    platzhalter.setPreferredSize(new Dimension(10, 150));
+	    
+	    gesamtPanel.add(pruefBestandenPanel, BorderLayout.CENTER);
+	    gesamtPanel.add(platzhalter, BorderLayout.SOUTH);
+	    
+
+	    this.statusPanel.add(gesamtPanel, BorderLayout.CENTER);
+	    this.statusPanel.revalidate();
+	    this.statusPanel.repaint();
+	}
+	
+	//Panel wenn Prüfung bestanden
+	void createNichtBestandenPanel() 
+	{
+	    this.statusPanel.removeAll();
+
+	    JPanel pruefNichtBestandenPanel = new JPanel();
+	    pruefNichtBestandenPanel.setLayout(new BorderLayout(10, 10));
+	    pruefNichtBestandenPanel.setBackground(Color.WHITE);
+
+	    JPanel checkboxPanel = new JPanel();
+	    checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
+	    checkboxPanel.setBackground(Color.WHITE);
+
+	    for (String grund : this.aktuellesGeraet.getGruende()) 
+	    {
+	        JCheckBox checkBox = new JCheckBox(grund);
+	        checkBox.setBackground(Color.WHITE);
+	        checkboxPanel.add(checkBox);
+	    }
+
+	    JScrollPane scrollPane = new JScrollPane(checkboxPanel);
+	    scrollPane.setPreferredSize(new Dimension(400, 150));
+	    scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+	    JTextArea kommentarArea = new JTextArea(4, 30);
+	    kommentarArea.setLineWrap(true);
+	    kommentarArea.setWrapStyleWord(true);
+	    JScrollPane kommentarScroll = new JScrollPane(kommentarArea);
+	    kommentarScroll.setBorder(BorderFactory.createTitledBorder("Kommentar"));
+
+	    pruefNichtBestandenPanel.add(scrollPane, BorderLayout.CENTER);
+	    pruefNichtBestandenPanel.add(kommentarScroll, BorderLayout.SOUTH);
+
+	    this.statusPanel.add(pruefNichtBestandenPanel);
+	    this.statusPanel.revalidate();
+	    this.statusPanel.repaint();
 	}
 }
