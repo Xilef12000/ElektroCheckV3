@@ -12,6 +12,9 @@ public class PrueferPanel extends JPanel
 	private JPanel statusPanel;
 	protected Geraet aktuellesGeraet;
 	public ScrollPanePanel scrollPanePanel;
+	private JLabel ausgewaehltesGeraet;
+	private JLabel schutzklasse;
+	private int ausgewaehlterGrundIndex = 0;
 
 	public PrueferPanel(MainPanel mainPanel) 
 	{
@@ -85,7 +88,12 @@ public class PrueferPanel extends JPanel
             {                
                 if (aktuellesGeraet != null) 
                 {
-                	
+                	switch(PrueferPanel.this.ausgewaehlterGrundIndex) 
+                	{
+                		case 0: PrueferPanel.this.aktuellesGeraet.setPruefungBestanden();
+                		
+                		case 1: PrueferPanel.this.aktuellesGeraet.setPruefungBestanden();
+                	}
                 } 
                 else 
                 {
@@ -118,17 +126,17 @@ public class PrueferPanel extends JPanel
 	    geraetInfoPanel.setLayout(new BoxLayout(geraetInfoPanel, BoxLayout.Y_AXIS));
 	    geraetInfoPanel.setBackground(Color.WHITE);
 
-	    JLabel ausgewaehltesGeraet = new JLabel("Ausgewähltes Gerät: " + 
+	    this.ausgewaehltesGeraet = new JLabel("Ausgewähltes Gerät: " + 
 	        (aktuellesGeraet != null ? aktuellesGeraet.getName() : "Keins ausgewählt"));
 	    
-	    JLabel schutzklasse = new JLabel("Geräteschutzklasse: " + 
+	    this.schutzklasse = new JLabel("Geräteschutzklasse: " + 
 	        (aktuellesGeraet != null ? aktuellesGeraet.getSchutzklasse() : "Unbekannt"));
 
-	    ausgewaehltesGeraet.setAlignmentX(Component.LEFT_ALIGNMENT);
-	    schutzklasse.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    this.ausgewaehltesGeraet.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    this.schutzklasse.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-	    ausgewaehltesGeraet.setMaximumSize(new Dimension(Integer.MAX_VALUE, ausgewaehltesGeraet.getPreferredSize().height));
-	    schutzklasse.setMaximumSize(new Dimension(Integer.MAX_VALUE, schutzklasse.getPreferredSize().height));
+	    this.ausgewaehltesGeraet.setMaximumSize(new Dimension(Integer.MAX_VALUE, ausgewaehltesGeraet.getPreferredSize().height));
+	    this.schutzklasse.setMaximumSize(new Dimension(Integer.MAX_VALUE, schutzklasse.getPreferredSize().height));
 
 	    geraetInfoPanel.add(ausgewaehltesGeraet);
 	    geraetInfoPanel.add(schutzklasse); 
@@ -245,22 +253,35 @@ public class PrueferPanel extends JPanel
 	{
 	    this.statusPanel.removeAll();
 
-	    JPanel pruefNichtBestandenPanel = new JPanel();
-	    pruefNichtBestandenPanel.setLayout(new BorderLayout(10, 10));
+	    JPanel pruefNichtBestandenPanel = new JPanel(new BorderLayout(10, 10));
 	    pruefNichtBestandenPanel.setBackground(Color.WHITE);
 
-	    JPanel checkboxPanel = new JPanel();
-	    checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
-	    checkboxPanel.setBackground(Color.WHITE);
+	    JPanel radioPanel = new JPanel();
+	    radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.Y_AXIS));
+	    radioPanel.setBackground(Color.WHITE);
 
-	    for (String grund : this.aktuellesGeraet.getGruende()) 
+	    ButtonGroup buttonGroup = new ButtonGroup();
+	    List<String> gruende = this.aktuellesGeraet.getGruende();
+
+	    for (int i = 0; i < gruende.size(); i++) 
 	    {
-	        JCheckBox checkBox = new JCheckBox(grund);
-	        checkBox.setBackground(Color.WHITE);
-	        checkboxPanel.add(checkBox);
-	    }
+	        String grund = gruende.get(i);
+	        JRadioButton radioButton = new JRadioButton(grund);
+	        radioButton.setBackground(Color.WHITE);
+	        int index = i + 1; // Zähle ab 1
 
-	    JScrollPane scrollPane = new JScrollPane(checkboxPanel);
+	        // Listener: speichert die Nummer des ausgewählten Grundes
+	        radioButton.addActionListener(e -> 
+	        {
+	            this.ausgewaehlterGrundIndex = index;
+	            System.out.println("Ausgewählter Grund: " + index);
+	        });
+
+	        buttonGroup.add(radioButton);
+	        radioPanel.add(radioButton);
+	    }
+	    
+	    JScrollPane scrollPane = new JScrollPane(radioPanel);
 	    scrollPane.setPreferredSize(new Dimension(400, 150));
 	    scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -276,5 +297,15 @@ public class PrueferPanel extends JPanel
 	    this.statusPanel.add(pruefNichtBestandenPanel);
 	    this.statusPanel.revalidate();
 	    this.statusPanel.repaint();
+	}
+	
+	//Aktuallisiere Panel
+	protected void aktualisierePanel() 
+	{
+		if (ausgewaehltesGeraet != null && schutzklasse != null && aktuellesGeraet != null) 
+		{
+		    ausgewaehltesGeraet.setText("Ausgewähltes Gerät: " + aktuellesGeraet.getName());
+		    schutzklasse.setText("Geräteschutzklasse: " + aktuellesGeraet.getSchutzklasse());
+		}
 	}
 }
