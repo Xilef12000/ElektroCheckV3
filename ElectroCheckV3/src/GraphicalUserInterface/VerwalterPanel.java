@@ -209,7 +209,7 @@ public class VerwalterPanel extends JPanel
 		erstellenPanel.add(geratErstellenPanel, BorderLayout.CENTER);		
 		this.add(erstellenPanel, BorderLayout.CENTER);
 	}
-	private void updateListModel() {
+	public void updateListModel() {
 		listModel.clear();
 		//Liste der Geräte aus MainPanel holen
         List<Geraet> geraete = mainPanel.getGeraeteListe();

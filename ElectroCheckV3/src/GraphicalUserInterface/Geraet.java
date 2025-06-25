@@ -38,7 +38,7 @@ public abstract class Geraet implements Serializable{
 		return name;
 	}
 	public String toString() {
-		return name;
+		return name + " - SK" + schutzklasse;
 	}
 	public String getSchutzklasse() {
 		return schutzklasse;

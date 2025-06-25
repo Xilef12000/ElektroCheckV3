@@ -8,6 +8,7 @@ import java.util.List;
 public class PrueferPanel extends JPanel
 {
 	private MainPanel mainPanel;
+	private DefaultListModel<Geraet> listModel;
 	private JList<Geraet> geraetJList;
 	private Geraet aktuellesGeraet;
 
@@ -35,17 +36,12 @@ public class PrueferPanel extends JPanel
 		scrollPanePanel.setLayout(new BorderLayout());
 		scrollPanePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
-        //Liste der Geräte aus MainPanel holen
-        List<Geraet> geraete = mainPanel.getGeraeteListe();
-
-        // JList erstellen mit DefaultListModel
-        DefaultListModel<Geraet> listModel = new DefaultListModel<>();
-        for (Geraet g : geraete) 
-        {
-            listModel.addElement(g);
-        }
+		// JList erstellen mit DefaultListModel
+        listModel = new DefaultListModel<>();
 
         geraetJList = new JList<>(listModel);
+        // Erst 'geraetJList' zuweißen, dann erst 'listModel' aktualisieren
+        updateListModel();
         geraetJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         geraetJList.setVisibleRowCount(10);
 
@@ -206,5 +202,16 @@ public class PrueferPanel extends JPanel
 		};
 		pruefBestanden.addActionListener(checkboxListener);
 		pruefNichtBestanden.addActionListener(checkboxListener);
+	}
+	public void updateListModel() {
+		listModel.clear();
+		//Liste der Geräte aus MainPanel holen
+        List<Geraet> geraete = mainPanel.getGeraeteListe();
+        for (Geraet g : geraete) 
+        {
+            listModel.addElement(g);
+        }
+        geraetJList.revalidate();
+    	geraetJList.repaint();
 	}
 }

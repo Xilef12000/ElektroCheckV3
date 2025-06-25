@@ -12,10 +12,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class MainPanel extends JPanel
 {
 	private List<Geraet> geraeteList = new ArrayList<>();
+	private JPanel userPanel;
 	
 	public MainPanel() 
 	{
-		//geraeteList.add(new Geraet_SK1("Test Gerät", true, 100)); // testgerät, to be deleted
+		geraeteList.add(new Geraet_SK1("Test Gerät", true, 100)); // testgerät, to be deleted
 		//Layout setzten
 		this.setLayout(new BorderLayout());
 		
@@ -70,8 +71,8 @@ public class MainPanel extends JPanel
 	    	        MainPanel.this.remove(deletePanel);
 	    	    }
 	    		//Center mit PrueferPanel überschreiben 
-	    		PrueferPanel prueferPanel = new PrueferPanel(MainPanel.this);
-	    		MainPanel.this.add(prueferPanel, BorderLayout.CENTER);
+	    		userPanel = new PrueferPanel(MainPanel.this);
+	    		MainPanel.this.add(userPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
 	    	    MainPanel.this.repaint();
 	    	}
@@ -88,8 +89,8 @@ public class MainPanel extends JPanel
 	    	        JPanel deletePanel = (JPanel) centerComp;
 	    	        MainPanel.this.remove(deletePanel);
 	    	    }
-	    		VerwalterPanel verwalterPanel = new VerwalterPanel(MainPanel.this);
-	    		MainPanel.this.add(verwalterPanel, BorderLayout.CENTER);
+	    		userPanel = new VerwalterPanel(MainPanel.this);
+	    		MainPanel.this.add(userPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
 	    	    MainPanel.this.repaint();
 	    	}
@@ -227,12 +228,17 @@ public class MainPanel extends JPanel
 				//Test aus datei laden
 				geraeteList = (List<Geraet>) ois.readObject();
 				repaint();
+				if (userPanel instanceof PrueferPanel) {
+					((PrueferPanel) userPanel).updateListModel();
+				}
+				else if (userPanel instanceof VerwalterPanel) {
+					((VerwalterPanel) userPanel).updateListModel();
+				}
 	            JOptionPane.showMessageDialog(this, "Tests wurde erfolgreich geladen.");
 			}
 			catch(Exception ex){
 				JOptionPane.showMessageDialog(this, "Ladevorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
 			}
 		}
-		
 	}
 }
