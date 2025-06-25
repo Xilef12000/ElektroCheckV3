@@ -20,6 +20,7 @@ public class MainPanel extends JPanel
 		Geraet testGeraet = new Geraet_SK1("Test Gerät", true, 100);
 		geraeteList.add(testGeraet); // testgerät, to be deleted
 		testGeraet.setPruefungNichtBestanden(2);
+		System.out.println(testGeraet.getGrund());
 		
 		//Layout setzten
 		this.setLayout(new BorderLayout());

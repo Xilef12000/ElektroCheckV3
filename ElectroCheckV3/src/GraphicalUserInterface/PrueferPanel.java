@@ -114,21 +114,21 @@ public class PrueferPanel extends JPanel
                 	{                		                	
 	                	switch(PrueferPanel.this.ausgewaehlterGrundIndex) 
 	                	{
-	                		case -1: PrueferPanel.this.aktuellesGeraet.setPruefungBestanden();
+	                		case -1: aktuellesGeraet.setPruefungBestanden(); break;
 	                		
-	                		case 0: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(0);
+	                		case 0: aktuellesGeraet.setPruefungNichtBestanden(0); break;
 	                		
-	                		case 1: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(1);
+	                		case 1: aktuellesGeraet.setPruefungNichtBestanden(1); break;
 	                		
-	                		case 2: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(2);
+	                		case 2: aktuellesGeraet.setPruefungNichtBestanden(2); break;
 	                		
-	                		case 3: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(3);
+	                		case 3: aktuellesGeraet.setPruefungNichtBestanden(3); break;
 	                		
-	                		case 4: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(4);
+	                		case 4: aktuellesGeraet.setPruefungNichtBestanden(4); break;
 	                		
-	                		case 5: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(5);
+	                		case 5: aktuellesGeraet.setPruefungNichtBestanden(5); break;
 	                		
-	                		case 6: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(6);	                			                		
+	                		case 6: aktuellesGeraet.setPruefungNichtBestanden(6); break;	                			                		
 	                	}
                 	}
                 	else JOptionPane.showMessageDialog(null, "Bitte den Prüfstatus setzen.");
@@ -283,7 +283,7 @@ public class PrueferPanel extends JPanel
 	    gesamtPanel.add(pruefBestandenPanel, BorderLayout.CENTER);
 	    gesamtPanel.add(platzhalter, BorderLayout.SOUTH);
 	    
-
+	    this.ausgewaehlterGrundIndex = -1;
 	    this.statusPanel.add(gesamtPanel, BorderLayout.CENTER);
 	    this.statusPanel.revalidate();
 	    this.statusPanel.repaint();
