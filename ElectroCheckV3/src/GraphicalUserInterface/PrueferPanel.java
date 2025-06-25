@@ -16,7 +16,8 @@ public class PrueferPanel extends JPanel
 	public ScrollPanePanel scrollPanePanel;
 	private JLabel ausgewaehltesGeraet;
 	private JLabel schutzklasse;
-	private int ausgewaehlterGrundIndex = 0;
+	private int ausgewaehlterGrundIndex = -1;
+	private int pruefstatus = 0;
 
 	public PrueferPanel(MainPanel mainPanel) 
 	{
@@ -109,12 +110,28 @@ public class PrueferPanel extends JPanel
             {                
                 if (aktuellesGeraet != null) 
                 {
-                	switch(PrueferPanel.this.ausgewaehlterGrundIndex) 
-                	{
-                		case 0: PrueferPanel.this.aktuellesGeraet.setPruefungBestanden();
-                		
-                		case 1: PrueferPanel.this.aktuellesGeraet.setPruefungBestanden();
+                	if(PrueferPanel.this.aktuellesGeraet != null && PrueferPanel.this.pruefstatus != 0) 
+                	{                		                	
+	                	switch(PrueferPanel.this.ausgewaehlterGrundIndex) 
+	                	{
+	                		case -1: PrueferPanel.this.aktuellesGeraet.setPruefungBestanden();
+	                		
+	                		case 0: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(0);
+	                		
+	                		case 1: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(1);
+	                		
+	                		case 2: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(2);
+	                		
+	                		case 3: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(3);
+	                		
+	                		case 4: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(4);
+	                		
+	                		case 5: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(5);
+	                		
+	                		case 6: PrueferPanel.this.aktuellesGeraet.setPruefungNichtBestanden(6);	                			                		
+	                	}
                 	}
+                	else JOptionPane.showMessageDialog(null, "Bitte den Prüfstatus setzen.");
                 } 
                 else 
                 {
@@ -208,6 +225,7 @@ public class PrueferPanel extends JPanel
 	            JOptionPane.showMessageDialog(null, "Bitte erst ein Gerät auswählen.");
 	            pruefBestanden.setSelected(false);
 	            pruefNichtBestanden.setSelected(false);
+	            this.ausgewaehlterGrundIndex = -1;
 	            return;
 	        }
 
@@ -215,11 +233,13 @@ public class PrueferPanel extends JPanel
 	        {
 	            pruefNichtBestanden.setSelected(false);
 	            createBestandenPanel();
+	            this.pruefstatus = 1;
 	        } 
 	        else 
 	        {
 	            pruefBestanden.setSelected(false);
 	            createNichtBestandenPanel();
+	            this.pruefstatus = 2;
 	        }
 	    };
 	    pruefBestanden.addActionListener(checkboxListener);
