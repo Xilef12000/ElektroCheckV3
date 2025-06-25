@@ -229,10 +229,10 @@ public class MainPanel extends JPanel
 				geraeteList = (List<Geraet>) ois.readObject();
 				repaint();
 				if (userPanel instanceof PrueferPanel) {
-					((PrueferPanel) userPanel).updateListModel();
+					((PrueferPanel) userPanel).scrollPanePanel.updateListModel();
 				}
 				else if (userPanel instanceof VerwalterPanel) {
-					((VerwalterPanel) userPanel).updateListModel();
+					((VerwalterPanel) userPanel).scrollPanePanel.updateListModel();
 				}
 	            JOptionPane.showMessageDialog(this, "Tests wurde erfolgreich geladen.");
 			}
