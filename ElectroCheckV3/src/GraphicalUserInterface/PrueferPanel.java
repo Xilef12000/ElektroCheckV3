@@ -3,6 +3,8 @@ package GraphicalUserInterface;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class PrueferPanel extends JPanel
@@ -69,7 +71,26 @@ public class PrueferPanel extends JPanel
             {
                 if (aktuellesGeraet != null) 
                 {
-                	
+                	JFileChooser fileChooser = new JFileChooser();
+            		int result = fileChooser.showSaveDialog(null);
+            		
+            		if(result == JFileChooser.APPROVE_OPTION) {
+            			
+            			File selectedFile = fileChooser.getSelectedFile();
+            			// Falls keine Endung angegeben wurde, .txt anhängen
+            		    if (!selectedFile.getName().toLowerCase().endsWith(".txt")) {
+            		        selectedFile = new File(selectedFile.getAbsolutePath() + ".txt");
+            		    }
+            			
+            			try(PrintWriter printWriter = new PrintWriter(selectedFile)){ 		// braucht keinen extra filewriter, erstellt printwriter autom., wenn man ihm datei übergibt
+        					aktuellesGeraet.drucken(printWriter);
+        					JOptionPane.showMessageDialog(null, "Geraet wurde erfolgreich in die ausgewählte Datei gedruckt.");
+        				
+            			}
+            			catch(Exception ex) {
+            				JOptionPane.showMessageDialog(null, "Druckvorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
+            			}
+            		}
                 } 
                 else 
                 {
