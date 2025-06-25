@@ -6,14 +6,21 @@ import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainPanel extends JPanel
 {
-	List<Geraet> geraeteList = new ArrayList<>();
+	private List<Geraet> geraeteList = new ArrayList<>();
+	private JPanel userPanel;
 	
 	public MainPanel() 
 	{
-		geraeteList.add(new Geraet_SK1("Test Gerät", true, 100)); // testgerät, to be deleted
+		//Zu testzwecken LÖSCHEN!!
+		Geraet testGeraet = new Geraet_SK1("Test Gerät", true, 100);
+		geraeteList.add(testGeraet); // testgerät, to be deleted
+		testGeraet.setPruefungNichtBestanden(2);
+		
 		//Layout setzten
 		this.setLayout(new BorderLayout());
 		
@@ -68,8 +75,8 @@ public class MainPanel extends JPanel
 	    	        MainPanel.this.remove(deletePanel);
 	    	    }
 	    		//Center mit PrueferPanel überschreiben 
-	    		PrueferPanel prueferPanel = new PrueferPanel(MainPanel.this);
-	    		MainPanel.this.add(prueferPanel, BorderLayout.CENTER);
+	    		userPanel = new PrueferPanel(MainPanel.this);
+	    		MainPanel.this.add(userPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
 	    	    MainPanel.this.repaint();
 	    	}
@@ -86,8 +93,8 @@ public class MainPanel extends JPanel
 	    	        JPanel deletePanel = (JPanel) centerComp;
 	    	        MainPanel.this.remove(deletePanel);
 	    	    }
-	    		VerwalterPanel verwalterPanel = new VerwalterPanel(MainPanel.this);
-	    		MainPanel.this.add(verwalterPanel, BorderLayout.CENTER);
+	    		userPanel = new VerwalterPanel(MainPanel.this);
+	    		MainPanel.this.add(userPanel, BorderLayout.CENTER);
 	    		MainPanel.this.revalidate();
 	    	    MainPanel.this.repaint();
 	    	}
@@ -111,7 +118,7 @@ public class MainPanel extends JPanel
 	    importieren.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
-	    	
+	    		importieren();
 	    	}
 	    }
 	    );
@@ -120,7 +127,7 @@ public class MainPanel extends JPanel
 	    exportieren.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
-	    		
+	    		exportieren();
 	    	}
 	    }
 	    );
@@ -142,7 +149,8 @@ public class MainPanel extends JPanel
 	    aboutUs.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
-	    		JOptionPane.showMessageDialog(null, "Gruppe: \nN. Bachmann \nV. Bahatyani \nM. Baron \nM. König \nN.Weigold");
+	    		JOptionPane.showMessageDialog(null, "Gruppe: \nN. Bachmann \nV. Bahatyani \nM. Baron \nM. König \nN.Weigold\n"
+	    											+"Semester: SS25");
 	    	}
 	    }
 	    );
@@ -151,7 +159,8 @@ public class MainPanel extends JPanel
 	    aboutSoftware.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
-	    		
+	    		JOptionPane.showMessageDialog(null, "Software: ElektroCheckV3"
+						+"\nDatum: 18.06.2025");
 	    	}
 	    }
 	    );
@@ -169,9 +178,71 @@ public class MainPanel extends JPanel
 	//Methoden
 	
 	//Getter für GeräteListe
-    List<Geraet> getGeraeteListe(){
+	protected List<Geraet> getGeraeteListe(){
     	return this.geraeteList;
     }
     
+	protected void addGeraet(Geraet geraet){
+		geraeteList.add(geraet);
+		System.out.println(geraeteList);
+    }
+	protected void removeGeraet(Geraet geraet){
+		geraeteList.remove(geraet);
+		System.out.println(geraeteList);
+    }
     
+    
+    //Methode zum Gerätelsite exportieren
+	public void exportieren() {
+			
+		JFileChooser fileChooser = new JFileChooser();
+		int result = fileChooser.showSaveDialog(this);
+		
+		if(result == JFileChooser.APPROVE_OPTION) {
+			//Standard-Endung hinzufügen für eingeschränketes öffnen später
+			File choosedFile = fileChooser.getSelectedFile();
+			if (!choosedFile.getName().endsWith(".ser")) {
+		        choosedFile = new File(choosedFile.getAbsolutePath() + ".ser");
+		    }
+		
+			try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(choosedFile))){  
+				//Geraete abspeicher
+				oos.writeObject(geraeteList);
+				JOptionPane.showMessageDialog(this, "Tests wurde erfolgreich gespeichert.");
+			}
+			catch(Exception ex){
+				JOptionPane.showMessageDialog(this, "Speichervogang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
+			}
+		}
+			
+	}
+	   
+	
+	//Methode um Test zu speicher
+	public void importieren() {
+		
+		JFileChooser fileChooser = new JFileChooser();
+		//EInschränkung der einlesbaren Datein
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Serielle Dateien (*.ser, *.dat, *.bin)", "ser", "dat", "bin");
+		fileChooser.setFileFilter(filter);
+		int result = fileChooser.showOpenDialog(this);
+		
+		if(result == JFileChooser.APPROVE_OPTION) {
+			try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileChooser.getSelectedFile()))){  
+				//Test aus datei laden
+				geraeteList = (List<Geraet>) ois.readObject();
+				repaint();
+				if (userPanel instanceof PrueferPanel) {
+					((PrueferPanel) userPanel).scrollPanePanel.updateListModel();
+				}
+				else if (userPanel instanceof VerwalterPanel) {
+					((VerwalterPanel) userPanel).scrollPanePanel.updateListModel();
+				}
+	            JOptionPane.showMessageDialog(this, "Tests wurde erfolgreich geladen.");
+			}
+			catch(Exception ex){
+				JOptionPane.showMessageDialog(this, "Ladevorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
+			}
+		}
+	}
 }

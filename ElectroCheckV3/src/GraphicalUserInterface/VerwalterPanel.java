@@ -3,13 +3,15 @@ package GraphicalUserInterface;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class VerwalterPanel extends JPanel
 {
 	private MainPanel mainPanel;
-	private JList<Geraet> geraetJList;
-	private Geraet aktuellesGeraet;
+	protected Geraet aktuellesGeraet;
+	public ScrollPanePanel scrollPanePanel;
 
 	public VerwalterPanel(MainPanel mainPanel) 
 	{
@@ -19,57 +21,14 @@ public class VerwalterPanel extends JPanel
 		this.setLayout(new BorderLayout());
 				
 		//Geräteliste erstellen
-		createScrollPane();
+		scrollPanePanel = new ScrollPanePanel(mainPanel, this);
 						
 		//Button-Leiste erstellen
 		createButtonBar();
 		
-		//Prüfungs-Panel erstellen
-		createPruefungDokPanel();
+		//Erstellen-Panel erstellen
+		createErstellenPanel();
 	}
-	
-	//Erstellen einer Scrollbaren Anzeige für alle angelegten Geräte
-	private void createScrollPane() 
-	{
-		JPanel scrollPanePanel = new JPanel();
-		scrollPanePanel.setLayout(new BorderLayout());
-		scrollPanePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		
-        //Liste der Geräte aus MainPanel holen
-        List<Geraet> geraete = mainPanel.getGeraeteListe();
-
-        // JList erstellen mit DefaultListModel
-        DefaultListModel<Geraet> listModel = new DefaultListModel<>();
-        for (Geraet g : geraete) 
-        {
-            listModel.addElement(g);
-        }
-
-        geraetJList = new JList<>(listModel);
-        geraetJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        geraetJList.setVisibleRowCount(10);
-
-        JScrollPane scrollPane = new JScrollPane(geraetJList);
-        scrollPane.setPreferredSize(new Dimension(300, 200));
-        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        
-        JLabel gereateUebersicht = new JLabel("Geräte-Übersicht");
-        gereateUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        
-        scrollPanePanel.add(gereateUebersicht, BorderLayout.NORTH);
-        scrollPanePanel.add(scrollPane, BorderLayout.CENTER);
-        this.add(scrollPanePanel, BorderLayout.WEST);
-        
-        //SelectionListener der ScrollPane um das ausgewählte Gerät zu aktuallisieren bei Auswahländerung
-        geraetJList.addListSelectionListener(e -> 
-        {
-            if (!e.getValueIsAdjusting()) 
-            {
-                aktuellesGeraet = geraetJList.getSelectedValue();
-            }
-        }
-        );
-    }
 	
 	//Erstellen der ButtonBar zum Auswählen der gewünschten Aktion
 	private void createButtonBar() 
@@ -83,7 +42,7 @@ public class VerwalterPanel extends JPanel
         buttonPanel.setLayout(new GridLayout(15, 1));
         
         //Buttons erstellen
-        JButton einsehenButton = new JButton("Gerät einsehen");
+        JButton geraetDruckenButton = new JButton("Gerät drucken");
         JButton geraetAnlegen = new JButton("Gerät anlegen");
         JButton geraetLoeschen = new JButton("Gerät löschen");
         
@@ -92,7 +51,7 @@ public class VerwalterPanel extends JPanel
         
         //Buttons in Panel einfügen
         buttonPanel.add(geraetAnlegen);
-        buttonPanel.add(einsehenButton);
+        buttonPanel.add(geraetDruckenButton);
         buttonPanel.add(geraetLoeschen);
         
         funktionsPanel.add(funktionen, BorderLayout.NORTH);
@@ -102,14 +61,33 @@ public class VerwalterPanel extends JPanel
         
         
         //Erstellen der ActionListener für die beiden Button
-        ActionListener einsehenAL = new ActionListener() 
+        ActionListener druckenAL = new ActionListener() 
         {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
                 if (aktuellesGeraet != null) 
                 {
-                	
+                	JFileChooser fileChooser = new JFileChooser();
+            		int result = fileChooser.showSaveDialog(null);
+            		
+            		if(result == JFileChooser.APPROVE_OPTION) {
+            			
+            			File selectedFile = fileChooser.getSelectedFile();
+            			// Falls keine Endung angegeben wurde, .txt anhängen
+            		    if (!selectedFile.getName().toLowerCase().endsWith(".txt")) {
+            		        selectedFile = new File(selectedFile.getAbsolutePath() + ".txt");
+            		    }
+            			
+            			try(PrintWriter printWriter = new PrintWriter(selectedFile)){ 		// braucht keinen extra filewriter, erstellt printwriter autom., wenn man ihm datei übergibt
+        					aktuellesGeraet.drucken(printWriter);
+        					JOptionPane.showMessageDialog(null, "Geraet wurde erfolgreich in die ausgewählte Datei gedruckt.");
+        				
+            			}
+            			catch(Exception ex) {
+            				JOptionPane.showMessageDialog(null, "Druckvorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
+            			}
+            		}
                 } 
                 else 
                 {
@@ -118,7 +96,7 @@ public class VerwalterPanel extends JPanel
 
             }
         };
-        einsehenButton.addActionListener(einsehenAL);
+        geraetDruckenButton.addActionListener(druckenAL);
         
         
         ActionListener geraetAnlegenAL = new ActionListener() 
@@ -126,15 +104,7 @@ public class VerwalterPanel extends JPanel
             @Override
             public void actionPerformed(ActionEvent e) 
             {                
-                if (aktuellesGeraet != null) 
-                {
-                	
-                } 
-                else 
-                {
-                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
-                }
-
+        		System.out.println("test erstellen");
             }
         };
         geraetAnlegen.addActionListener(geraetAnlegenAL);
@@ -147,7 +117,8 @@ public class VerwalterPanel extends JPanel
             {                
                 if (aktuellesGeraet != null) 
                 {
-                	
+                	mainPanel.removeGeraet(aktuellesGeraet);
+                	scrollPanePanel.updateListModel();
                 } 
                 else 
                 {
@@ -160,67 +131,64 @@ public class VerwalterPanel extends JPanel
 	}
 	
 	//Panel zur Prüfungsdokumentation einzelner Geräte
-	void createPruefungDokPanel()
+	void createErstellenPanel()
 	{
-		JPanel dokuPanel = new JPanel();
-		dokuPanel.setLayout(new BorderLayout());
-		dokuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		JPanel erstellenPanel = new JPanel();
+		erstellenPanel.setLayout(new BorderLayout());
+		erstellenPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
-		JLabel dokuUebersicht = new JLabel("Dokumentationsübersicht");
-		dokuUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));		
-		dokuPanel.add(dokuUebersicht, BorderLayout.NORTH);
+		JLabel erstellen = new JLabel("Gerät erstellen");
+		erstellen.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));		
+		erstellenPanel.add(erstellen, BorderLayout.NORTH);
 		
 		//Internes Panel zur Funktionsimplementierung	
-		JPanel pruefungsPanel = new JPanel();
-		pruefungsPanel.setLayout(new GridLayout(20, 1));
-		pruefungsPanel.setBackground(Color.WHITE);
-		pruefungsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		JPanel geratErstellenPanel = new JPanel();
+		geratErstellenPanel.setLayout(new GridLayout(20, 1));
+		geratErstellenPanel.setBackground(Color.WHITE);
+		geratErstellenPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
-		String geraeteName = (aktuellesGeraet != null) ? aktuellesGeraet.getName() : "";
-		JLabel ausgewaehltesGeraet = new JLabel("Ausgewähltes Gerät: " + geraeteName);
-		ausgewaehltesGeraet.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-		ausgewaehltesGeraet.setFont(ausgewaehltesGeraet.getFont().deriveFont(18f));
+		JPanel namePanel = new JPanel();
+		namePanel.setLayout(new BorderLayout());
+		geratErstellenPanel.add(namePanel);
+		JLabel nameLabel = new JLabel("Geräte Name: ");
+		JTextField nameField = new JTextField(100);
+		namePanel.add(nameLabel, BorderLayout.WEST);
+		namePanel.add(nameField, BorderLayout.CENTER);
 		
-		//Panel für Dokumentation des Prüfstatus
-		JPanel pruefStatus = new JPanel();
-		pruefStatus.setLayout(new BorderLayout());
-		pruefStatus.setBackground(Color.WHITE);
+		JPanel klassePanel = new JPanel();
+		klassePanel.setLayout(new BorderLayout());
+		geratErstellenPanel.add(klassePanel);
+		JLabel klasseLabel = new JLabel("Geräte Klasse: ");
+		String[] geraeteTypen = { "Schutzklasse I", "Schutzklasse II", "Schutzklasse III"};
+		JComboBox<String> geraeteTypenBox = new JComboBox<>(geraeteTypen);
+		klassePanel.add(klasseLabel, BorderLayout.WEST);
+		klassePanel.add(geraeteTypenBox, BorderLayout.CENTER);
 		
-		//Checkbox Prüfung bestanden
-		JCheckBox pruefBestanden = new JCheckBox("Prüfung bestanden");
-		pruefBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
-		pruefBestanden.setBackground(Color.WHITE);
-		pruefBestanden.setFont(pruefBestanden.getFont().deriveFont(14f));
-		pruefStatus.add(pruefBestanden, BorderLayout.WEST);
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BorderLayout());
+		geratErstellenPanel.add(buttonPanel);
+		JButton erstellenButton = new JButton("Gerät erstellen");
+		JButton abbrechenButton = new JButton("Abbrechen");
+		buttonPanel.add(erstellenButton, BorderLayout.WEST);
+		buttonPanel.add(abbrechenButton, BorderLayout.EAST);
 		
-		//Checkbox Prüfung nicht bestanden
-		JCheckBox pruefNichtBestanden = new JCheckBox("Prüfung nicht bestanden");
-		pruefNichtBestanden.setHorizontalTextPosition(SwingConstants.LEFT);
-		pruefNichtBestanden.setBackground(Color.WHITE);
-		pruefNichtBestanden.setFont(pruefNichtBestanden.getFont().deriveFont(14f));
-		pruefNichtBestanden.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-		pruefStatus.add(pruefNichtBestanden, BorderLayout.CENTER);
+		ActionListener erstellenButtonAL = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	String schutzklasse = (String) geraeteTypenBox.getSelectedItem();
+            	if (geraeteTypen[0].equals(schutzklasse)) {
+            		mainPanel.addGeraet(new Geraet_SK1(nameField.getText(), true, 100));
+            	} else if (geraeteTypen[1].equals(schutzklasse)) {
+            		mainPanel.addGeraet(new Geraet_SK2(nameField.getText(), true, 100));
+            	} else if (geraeteTypen[2].equals(schutzklasse)) {
+            		mainPanel.addGeraet(new Geraet_SK3(nameField.getText(), true, 100));
+            	}
+            	scrollPanePanel.updateListModel();
+            }
+        };
+        erstellenButton.addActionListener(erstellenButtonAL);
 		
-		pruefungsPanel.add(ausgewaehltesGeraet);
-		pruefungsPanel.add(pruefStatus);
-		dokuPanel.add(pruefungsPanel, BorderLayout.CENTER);		
-		this.add(dokuPanel, BorderLayout.CENTER);
-		
-		
-		//ActionListener für die Checkboxen
-		ActionListener checkboxListener = e -> 
-		{
-		    Object source = e.getSource();
-		    if (source == pruefBestanden && pruefBestanden.isSelected()) 
-		    {
-		        pruefNichtBestanden.setSelected(false);
-		    } 
-		    else if (source == pruefNichtBestanden && pruefNichtBestanden.isSelected()) 
-		    {
-		        pruefBestanden.setSelected(false);
-		    }
-		};
-		pruefBestanden.addActionListener(checkboxListener);
-		pruefNichtBestanden.addActionListener(checkboxListener);
+		erstellenPanel.add(geratErstellenPanel, BorderLayout.CENTER);		
+		this.add(erstellenPanel, BorderLayout.CENTER);
 	}
 }

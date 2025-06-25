@@ -9,8 +9,9 @@ public class PrueferPanel extends JPanel
 {
 	private MainPanel mainPanel;
 	private JList<Geraet> geraetJList;
-	private Geraet aktuellesGeraet;
 	private JPanel statusPanel;
+	protected Geraet aktuellesGeraet;
+	public ScrollPanePanel scrollPanePanel;
 
 	public PrueferPanel(MainPanel mainPanel) 
 	{
@@ -20,7 +21,7 @@ public class PrueferPanel extends JPanel
 		this.setLayout(new BorderLayout());
 				
 		//Geräteliste erstellen
-		createScrollPane();
+		scrollPanePanel = new ScrollPanePanel(mainPanel, this);
 						
 		//Button-Leiste erstellen
 		createButtonBar();
@@ -28,49 +29,6 @@ public class PrueferPanel extends JPanel
 		//Prüfungs-Panel erstellen
 		createPruefungDokPanel();
 	}
-	
-	//Erstellen einer Scrollbaren Anzeige für alle angelegten Geräte
-	private void createScrollPane() 
-	{
-		JPanel scrollPanePanel = new JPanel();
-		scrollPanePanel.setLayout(new BorderLayout());
-		scrollPanePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		
-        //Liste der Geräte aus MainPanel holen
-        List<Geraet> geraete = mainPanel.getGeraeteListe();
-
-        // JList erstellen mit DefaultListModel
-        DefaultListModel<Geraet> listModel = new DefaultListModel<>();
-        for (Geraet g : geraete) 
-        {
-            listModel.addElement(g);
-        }
-
-        geraetJList = new JList<>(listModel);
-        geraetJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        geraetJList.setVisibleRowCount(10);
-
-        JScrollPane scrollPane = new JScrollPane(geraetJList);
-        scrollPane.setPreferredSize(new Dimension(300, 200));
-        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        
-        JLabel gereateUebersicht = new JLabel("Geräte-Übersicht");
-        gereateUebersicht.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        
-        scrollPanePanel.add(gereateUebersicht, BorderLayout.NORTH);
-        scrollPanePanel.add(scrollPane, BorderLayout.CENTER);
-        this.add(scrollPanePanel, BorderLayout.WEST);
-        
-        //SelectionListener der ScrollPane um das ausgewählte Gerät zu aktuallisieren bei Auswahländerung
-        geraetJList.addListSelectionListener(e -> 
-        {
-            if (!e.getValueIsAdjusting()) 
-            {
-                aktuellesGeraet = geraetJList.getSelectedValue();
-            }
-        }
-        );
-    }
 	
 	//Erstellen der ButtonBar zum Auswählen der gewünschten Aktion
 	private void createButtonBar() 
