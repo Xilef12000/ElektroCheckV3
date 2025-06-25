@@ -37,18 +37,23 @@ public abstract class Geraet implements Serializable{
 	public String getName() {
 		return name;
 	}
+	
 	public String toString() {
 		return name + " - SK" + schutzklasse;
 	}
+	
 	public String getSchutzklasse() {
 		return schutzklasse;
 	}
+	
 	public Boolean getPruefungBestanden() {
 		return pruefungBestanden;
 	}
+	
 	public LocalDateTime getNaechstepruefung() {
 		return naechstepruefung;
 	}
+	
 	public void print() {
 		System.out.println(String.format("name: %s", name));
 		System.out.println(String.format("pruefungBestanden: %b", pruefungBestanden));
@@ -59,14 +64,19 @@ public abstract class Geraet implements Serializable{
 			System.out.println(String.format("grund: %s", grund.toString()));
 		}
 	}
+	
 	// Geräteinformationen in Textdatei exportieren.
 	public void drucken(PrintWriter printWriterinDatei) {
 		printWriterinDatei.println("Geraeteinformationen:");
 		printWriterinDatei.println("Geraetename: " + this.name);
 		printWriterinDatei.println("Status Pruefung: " + this.pruefungBestanden);
+		if(!this.pruefungBestanden) {
+			printWriterinDatei.println("Grund: " + this.grund);
+		}
 		printWriterinDatei.println("Gueltigkeit Pruefung: " + this.tageBisAbgelaufen);
 		printWriterinDatei.println("Naechste Pruefung" + this.naechstepruefung);
 	}
+	
 	public void setPruefungBestanden() {
 		// wenn Prüfung bestanden ist:
 		//	- setze pruefungBestanden
@@ -75,6 +85,7 @@ public abstract class Geraet implements Serializable{
 		naechstepruefung = LocalDateTime.now().plusDays(tageBisAbgelaufen);
 		this.grund = null;
 	}
+	
 	public void setPruefungNichtBestanden(int grundi) {
 		// wenn Prüfung bestanden ist:
 		//	- setze pruefungBestanden auf false
@@ -87,6 +98,7 @@ public abstract class Geraet implements Serializable{
 		// Element von Datentyp/Klasse 'Grund'(Enum)
 		this.grund = new ArrayList<>(grundeErlaubt).get(grundi);
 	}
+	
 	public List<String> getGruende(){
 		// gibt String Liste aller Möglichen Gründe dieses Gerätes/dieser Geräteklasse zurück
 		// Reihenfolge entspricht 'grundeErlaubt' (wie im Konstruktor der SKs)
