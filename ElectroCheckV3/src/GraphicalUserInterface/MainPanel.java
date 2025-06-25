@@ -169,9 +169,15 @@ public class MainPanel extends JPanel
 	//Methoden
 	
 	//Getter für GeräteListe
-    List<Geraet> getGeraeteListe(){
+	protected List<Geraet> getGeraeteListe(){
     	return this.geraeteList;
     }
+    
+	protected void addGeraet(Geraet geraet){
+		geraeteList.add(geraet);
+		System.out.println(geraeteList);
+    }
+    
     
     
 }
