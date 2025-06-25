@@ -135,7 +135,8 @@ public class VerwalterPanel extends JPanel
             {                
                 if (aktuellesGeraet != null) 
                 {
-                	
+                	mainPanel.removeGeraet(aktuellesGeraet);
+                	updateListModel();
                 } 
                 else 
                 {
@@ -196,9 +197,9 @@ public class VerwalterPanel extends JPanel
             	if (geraeteTypen[0].equals(schutzklasse)) {
             		mainPanel.addGeraet(new Geraet_SK1(nameField.getText(), true, 100));
             	} else if (geraeteTypen[1].equals(schutzklasse)) {
-            	    
+            		mainPanel.addGeraet(new Geraet_SK2(nameField.getText(), true, 100));
             	} else if (geraeteTypen[2].equals(schutzklasse)) {
-            	    
+            		mainPanel.addGeraet(new Geraet_SK3(nameField.getText(), true, 100));
             	}
             	updateListModel();
             }
