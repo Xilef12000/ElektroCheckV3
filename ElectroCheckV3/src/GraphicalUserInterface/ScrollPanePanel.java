@@ -55,6 +55,7 @@ public class ScrollPanePanel extends JPanel {
 				}
 				else if (parentPanel instanceof VerwalterPanel) {
 					((VerwalterPanel) parentPanel).aktuellesGeraet = geraetJList.getSelectedValue();
+					((VerwalterPanel) parentPanel).aktualisiereGeraetEigenschaften();
 				}
             }
         }
@@ -70,5 +71,8 @@ public class ScrollPanePanel extends JPanel {
         }
         geraetJList.revalidate();
     	geraetJList.repaint();
+	}
+	public void clearSelection() {
+		geraetJList.clearSelection();
 	}
 }

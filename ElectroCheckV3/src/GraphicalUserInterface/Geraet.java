@@ -37,6 +37,9 @@ public abstract class Geraet implements Serializable{
 	public String getName() {
 		return name;
 	}
+	public int getTageBisAbgelaufen() {
+		return tageBisAbgelaufen;
+	}
 	
 	public String toString() {
 		return name + " - SK" + schutzklasse;
@@ -69,7 +72,7 @@ public abstract class Geraet implements Serializable{
 	public void drucken(PrintWriter printWriterinDatei) {
 		printWriterinDatei.println("Geraeteinformationen:");
 		printWriterinDatei.println("Geraetename: " + this.name);
-		printWriterinDatei.println("Status Pruefung: " + this.pruefungBestanden);
+		printWriterinDatei.println("Pruefung Bestanden: " + this.pruefungBestanden);
 		if(!this.pruefungBestanden) {
 			printWriterinDatei.println("Grund: " + this.grund);
 		}

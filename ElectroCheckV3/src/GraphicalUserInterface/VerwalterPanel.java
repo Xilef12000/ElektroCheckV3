@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.PrintWriter;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class VerwalterPanel extends JPanel
@@ -12,7 +13,20 @@ public class VerwalterPanel extends JPanel
 	private MainPanel mainPanel;
 	protected Geraet aktuellesGeraet;
 	public ScrollPanePanel scrollPanePanel;
-
+	
+	private ActionListener geraetAnlegenAL;
+	private JTextField nameField;
+	private JSpinner daysField;
+	private JComboBox<String> geraeteTypenBox;
+	private JPanel submitExitPanel;
+	private JButton erstellenButton;
+	private JButton abbrechenButton;
+	
+	private JPanel eigenschaftenPanel;
+	private JCheckBox bestandenBox;
+	private JTextField grundText;
+	private JTextField naechstePText;
+	
 	public VerwalterPanel(MainPanel mainPanel) 
 	{
 		this.mainPanel = mainPanel;
@@ -99,12 +113,23 @@ public class VerwalterPanel extends JPanel
         geraetDruckenButton.addActionListener(druckenAL);
         
         
-        ActionListener geraetAnlegenAL = new ActionListener() 
+        geraetAnlegenAL = new ActionListener() 
         {
             @Override
             public void actionPerformed(ActionEvent e) 
-            {                
-        		System.out.println("test erstellen");
+            {
+            	scrollPanePanel.clearSelection();
+            	nameField.setText("");
+    			nameField.setEnabled(true);
+    			daysField.setValue(365);
+    			daysField.setEnabled(true);
+    			geraeteTypenBox.setEnabled(true);
+    			geraeteTypenBox.setSelectedIndex(0);
+    			submitExitPanel.setVisible(true);
+    			erstellenButton.setEnabled(true);
+    			abbrechenButton.setEnabled(true);
+    			
+    			eigenschaftenPanel.setVisible(false);
             }
         };
         geraetAnlegen.addActionListener(geraetAnlegenAL);
@@ -143,52 +168,122 @@ public class VerwalterPanel extends JPanel
 		
 		//Internes Panel zur Funktionsimplementierung	
 		JPanel geratErstellenPanel = new JPanel();
-		geratErstellenPanel.setLayout(new GridLayout(20, 1));
+		geratErstellenPanel.setLayout(new GridLayout(2, 1));
 		geratErstellenPanel.setBackground(Color.WHITE);
 		geratErstellenPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
+		JPanel basicInfoPanel  = new JPanel(new GridLayout(5, 1));
+		geratErstellenPanel.add(basicInfoPanel);
+		
 		JPanel namePanel = new JPanel();
 		namePanel.setLayout(new BorderLayout());
-		geratErstellenPanel.add(namePanel);
+		basicInfoPanel.add(namePanel);
 		JLabel nameLabel = new JLabel("Geräte Name: ");
-		JTextField nameField = new JTextField(100);
+		nameField = new JTextField(100);
 		namePanel.add(nameLabel, BorderLayout.WEST);
 		namePanel.add(nameField, BorderLayout.CENTER);
 		
+		JPanel daysPanel = new JPanel();
+		daysPanel.setLayout(new BorderLayout());
+		basicInfoPanel.add(daysPanel);
+		JLabel daysLabel = new JLabel("Gültichkeit Prüfung (in Tagen): ");
+		daysField = new JSpinner(new SpinnerNumberModel(365, 1, 730, 1));
+		daysPanel.add(daysLabel, BorderLayout.WEST);
+		daysPanel.add(daysField, BorderLayout.CENTER);
+		
 		JPanel klassePanel = new JPanel();
 		klassePanel.setLayout(new BorderLayout());
-		geratErstellenPanel.add(klassePanel);
+		basicInfoPanel.add(klassePanel);
 		JLabel klasseLabel = new JLabel("Geräte Klasse: ");
 		String[] geraeteTypen = { "Schutzklasse I", "Schutzklasse II", "Schutzklasse III"};
-		JComboBox<String> geraeteTypenBox = new JComboBox<>(geraeteTypen);
+		geraeteTypenBox = new JComboBox<>(geraeteTypen);
 		klassePanel.add(klasseLabel, BorderLayout.WEST);
 		klassePanel.add(geraeteTypenBox, BorderLayout.CENTER);
 		
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BorderLayout());
-		geratErstellenPanel.add(buttonPanel);
-		JButton erstellenButton = new JButton("Gerät erstellen");
-		JButton abbrechenButton = new JButton("Abbrechen");
-		buttonPanel.add(erstellenButton, BorderLayout.WEST);
-		buttonPanel.add(abbrechenButton, BorderLayout.EAST);
+		submitExitPanel = new JPanel();
+		submitExitPanel.setLayout(new BorderLayout());
+		basicInfoPanel.add(submitExitPanel);
+		erstellenButton = new JButton("Gerät erstellen");
+		abbrechenButton = new JButton("Eingabe Löschen");
+		submitExitPanel.add(erstellenButton, BorderLayout.WEST);
+		submitExitPanel.add(abbrechenButton, BorderLayout.EAST);
+		
+		eigenschaftenPanel = new JPanel();
+		eigenschaftenPanel.setVisible(false);
+		eigenschaftenPanel.setLayout(new GridLayout(5, 2));
+		geratErstellenPanel.add(eigenschaftenPanel);
+		
+		JLabel bestanden = new JLabel("Prüfung bestanden: ");
+		eigenschaftenPanel.add(bestanden);
+		
+		bestandenBox = new JCheckBox();
+		bestandenBox.setEnabled(false);
+		eigenschaftenPanel.add(bestandenBox);
+		
+		JLabel grund = new JLabel("Grund: ");
+		eigenschaftenPanel.add(grund);
+		
+		grundText = new JTextField("");
+		grundText.setEnabled(false);
+		eigenschaftenPanel.add(grundText);
+		
+		JLabel naechsteP = new JLabel("Nächste pruefung: ");
+		eigenschaftenPanel.add(naechsteP);
+		
+		naechstePText= new JTextField("");
+		naechstePText.setEnabled(false);
+		eigenschaftenPanel.add(naechstePText);
 		
 		ActionListener erstellenButtonAL = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	String schutzklasse = (String) geraeteTypenBox.getSelectedItem();
-            	if (geraeteTypen[0].equals(schutzklasse)) {
-            		mainPanel.addGeraet(new Geraet_SK1(nameField.getText(), true, 100));
-            	} else if (geraeteTypen[1].equals(schutzklasse)) {
-            		mainPanel.addGeraet(new Geraet_SK2(nameField.getText(), true, 100));
-            	} else if (geraeteTypen[2].equals(schutzklasse)) {
-            		mainPanel.addGeraet(new Geraet_SK3(nameField.getText(), true, 100));
+            	if (!nameField.getText().isBlank()) {
+            		String schutzklasse = (String) geraeteTypenBox.getSelectedItem();
+                	if (geraeteTypen[0].equals(schutzklasse)) {
+                		mainPanel.addGeraet(new Geraet_SK1(nameField.getText(), true, (int) daysField.getValue()));
+                	} else if (geraeteTypen[1].equals(schutzklasse)) {
+                		mainPanel.addGeraet(new Geraet_SK2(nameField.getText(), true, (int) daysField.getValue()));
+                	} else if (geraeteTypen[2].equals(schutzklasse)) {
+                		mainPanel.addGeraet(new Geraet_SK3(nameField.getText(), true, (int) daysField.getValue()));
+                	}
+                	scrollPanePanel.updateListModel();
             	}
-            	scrollPanePanel.updateListModel();
+            	else 
+                {
+                	JOptionPane.showMessageDialog(null, "Bitte Gerätenamen eingeben.");
+                }
             }
         };
         erstellenButton.addActionListener(erstellenButtonAL);
+        abbrechenButton.addActionListener(geraetAnlegenAL);
 		
 		erstellenPanel.add(geratErstellenPanel, BorderLayout.CENTER);		
 		this.add(erstellenPanel, BorderLayout.CENTER);
+	}
+	public void aktualisiereGeraetEigenschaften() {
+		if (aktuellesGeraet != null) {
+			nameField.setText(aktuellesGeraet.getName());
+			nameField.setEnabled(false);
+			daysField.setValue(aktuellesGeraet.getTageBisAbgelaufen());
+			daysField.setEnabled(false);
+			if (aktuellesGeraet instanceof Geraet_SK1) {
+				geraeteTypenBox.setSelectedIndex(0);
+			}
+			else if (aktuellesGeraet instanceof Geraet_SK2) {
+				geraeteTypenBox.setSelectedIndex(1);			
+			}
+			else if (aktuellesGeraet instanceof Geraet_SK3) {
+				geraeteTypenBox.setSelectedIndex(2);
+			}
+			geraeteTypenBox.setEnabled(false);
+			submitExitPanel.setVisible(false);
+			erstellenButton.setEnabled(false);
+			abbrechenButton.setEnabled(false);
+			bestandenBox.setSelected(aktuellesGeraet.getPruefungBestanden());
+			grundText.setText(aktuellesGeraet.getName());
+			naechstePText.setText(aktuellesGeraet.getNaechstepruefung().format(DateTimeFormatter.ofPattern("dd-MMM-yy")));
+			System.out.println(aktuellesGeraet.getNaechstepruefung().toString());
+			eigenschaftenPanel.setVisible(true);
+		}
 	}
 }
