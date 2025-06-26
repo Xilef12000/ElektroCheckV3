@@ -26,6 +26,7 @@ public class VerwalterPanel extends JPanel
 	private JCheckBox bestandenBox;
 	private JTextField grundText;
 	private JTextField naechstePText;
+	private JTextArea kommentarArea;
 	
 	public VerwalterPanel(MainPanel mainPanel) 
 	{
@@ -233,6 +234,14 @@ public class VerwalterPanel extends JPanel
 		naechstePText= new JTextField("");
 		naechstePText.setEnabled(false);
 		eigenschaftenPanel.add(naechstePText);
+	    
+		JLabel kommentarLabel = new JLabel("Kommentar: ");
+		eigenschaftenPanel.add(kommentarLabel);
+		kommentarArea = new JTextArea(4, 30);
+		kommentarArea.setEnabled(false);
+	    kommentarArea.setLineWrap(true);
+	    kommentarArea.setWrapStyleWord(true);
+	    eigenschaftenPanel.add(kommentarArea);
 		
 		ActionListener erstellenButtonAL = new ActionListener() {
             @Override
@@ -283,6 +292,7 @@ public class VerwalterPanel extends JPanel
 			grundText.setText(aktuellesGeraet.getGrund());
 			naechstePText.setText(aktuellesGeraet.getNaechstepruefung().format(DateTimeFormatter.ofPattern("dd-MMM-yy")));
 			System.out.println(aktuellesGeraet.getNaechstepruefung().toString());
+			kommentarArea.setText(aktuellesGeraet.getNotizen());
 			eigenschaftenPanel.setVisible(true);
 		}
 	}

@@ -21,6 +21,7 @@ public class PrueferPanel extends JPanel
 	private int pruefstatus = 0;
 	private JCheckBox pruefBestanden;
 	private JCheckBox pruefNichtBestanden;
+	private JTextArea kommentarArea;
 
 	public PrueferPanel(MainPanel mainPanel) 
 	{
@@ -140,6 +141,7 @@ public class PrueferPanel extends JPanel
         	                		case 6: aktuellesGeraet.setPruefungNichtBestanden(6); break;	                			                		
         	                	}
                 				erfolg = true;
+                				aktuellesGeraet.setNotizen(kommentarArea.getText());
                 			}
                 			else JOptionPane.showMessageDialog(null, "Bitte Grund auswählen.");
                 		}
@@ -153,17 +155,7 @@ public class PrueferPanel extends JPanel
                 if (erfolg) {
                 	scrollPanePanel.updateListModel();
                     JOptionPane.showMessageDialog(null, "Gerät erfolgreich Dokumentiert");
-                    pruefungsPanel.setVisible(false);
-                    pruefBestanden.setSelected(false);
-                    pruefNichtBestanden.setSelected(false);
-                    statusPanel.removeAll();
-                    JPanel gesamtPanel = new JPanel();
-            	    gesamtPanel.setLayout(new BorderLayout(10, 10));
-            	    gesamtPanel.setBackground(Color.WHITE);
-            	    statusPanel.add(gesamtPanel, BorderLayout.CENTER);
-            	    statusPanel.revalidate();
-            	    statusPanel.repaint();
-            	    pruefstatus = 0;
+                    resetPruefungsPanel();
                 }
             }
         };
@@ -354,11 +346,12 @@ public class PrueferPanel extends JPanel
 	    scrollPane.setPreferredSize(new Dimension(400, 150));
 	    scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-	    JTextArea kommentarArea = new JTextArea(4, 30);
+	    kommentarArea = new JTextArea(4, 30);
 	    kommentarArea.setLineWrap(true);
 	    kommentarArea.setWrapStyleWord(true);
 	    JScrollPane kommentarScroll = new JScrollPane(kommentarArea);
 	    kommentarScroll.setBorder(BorderFactory.createTitledBorder("Kommentar"));
+	    kommentarArea.setText(aktuellesGeraet.getNotizen());
 
 	    pruefNichtBestandenPanel.add(scrollPane, BorderLayout.CENTER);
 	    pruefNichtBestandenPanel.add(kommentarScroll, BorderLayout.SOUTH);
@@ -373,9 +366,23 @@ public class PrueferPanel extends JPanel
 	{
 		if (ausgewaehltesGeraet != null && schutzklasse != null && aktuellesGeraet != null) 
 		{
+			resetPruefungsPanel();
 		    ausgewaehltesGeraet.setText("Ausgewähltes Gerät: " + aktuellesGeraet.getName());
 		    schutzklasse.setText("Geräteschutzklasse: " + aktuellesGeraet.getSchutzklasse());
 		    pruefungsPanel.setVisible(true);
 		}
+	}
+	private void resetPruefungsPanel() {
+		pruefungsPanel.setVisible(false);
+        pruefBestanden.setSelected(false);
+        pruefNichtBestanden.setSelected(false);
+        statusPanel.removeAll();
+        JPanel gesamtPanel = new JPanel();
+	    gesamtPanel.setLayout(new BorderLayout(10, 10));
+	    gesamtPanel.setBackground(Color.WHITE);
+	    statusPanel.add(gesamtPanel, BorderLayout.CENTER);
+	    statusPanel.revalidate();
+	    statusPanel.repaint();
+	    pruefstatus = 0;
 	}
 }

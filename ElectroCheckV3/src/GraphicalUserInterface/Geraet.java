@@ -11,6 +11,7 @@ public abstract class Geraet implements Serializable{
 	private LocalDateTime naechstepruefung;
 	private int tageBisAbgelaufen;
 	private String schutzklasse;
+	private String notizen;
 	
 	// 'grund' vom Typ 'Grund' (Enum)
 	// kann alle möglichen Gründe annehmen, auch die die nicht zur SK passen
@@ -40,7 +41,12 @@ public abstract class Geraet implements Serializable{
 	public int getTageBisAbgelaufen() {
 		return tageBisAbgelaufen;
 	}
-	
+	public void setNotizen(String notizen) {
+		this.notizen = notizen;
+	}
+	public String getNotizen() {
+		return notizen;
+	}
 	public String getGrund() {
 		if (grund != null) {
 			return grund.toString();
