@@ -196,8 +196,8 @@ public class MainPanel extends JPanel
 		if(result == JFileChooser.APPROVE_OPTION) {
 			//Standard-Endung hinzufügen für eingeschränketes öffnen später
 			File choosedFile = fileChooser.getSelectedFile();
-			if (!choosedFile.getName().endsWith(".ser")) {
-		        choosedFile = new File(choosedFile.getAbsolutePath() + ".ser");
+			if (!choosedFile.getName().endsWith(".ecv3")) {
+		        choosedFile = new File(choosedFile.getAbsolutePath() + ".ecv3");
 		    }
 		
 			try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(choosedFile))){  
@@ -218,7 +218,7 @@ public class MainPanel extends JPanel
 		
 		JFileChooser fileChooser = new JFileChooser();
 		//EInschränkung der einlesbaren Datein
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Serielle Dateien (*.ser, *.dat, *.bin)", "ser", "dat", "bin");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("ElektroCheckV3 Dateien (*.ecv3)", "ecv3");
 		fileChooser.setFileFilter(filter);
 		int result = fileChooser.showOpenDialog(this);
 		
