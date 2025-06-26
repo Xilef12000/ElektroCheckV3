@@ -45,7 +45,10 @@ public abstract class Geraet implements Serializable{
 		this.notizen = notizen;
 	}
 	public String getNotizen() {
-		return notizen;
+		if (notizen != null && !notizen.isBlank()) {
+			return notizen;
+		}
+		return "";
 	}
 	public String getGrund() {
 		if (grund != null) {
@@ -84,26 +87,28 @@ public abstract class Geraet implements Serializable{
 	}
 	
 	public void print() {
-		System.out.println(String.format("name: %s", name));
-		System.out.println(String.format("pruefungBestanden: %b", pruefungBestanden));
-		if (pruefungBestanden) {
-			System.out.println(String.format("naechstepruefung: %s", naechstepruefung.toString()));
+		System.out.println("Geraeteinformationen:");
+		System.out.println("Geraetename: " + name);
+		System.out.println("Pruefung Bestanden: " + pruefungBestanden);
+		if(!pruefungBestanden) {
+			System.out.println("Grund: " + getGrund());
 		}
-		else {
-			System.out.println(String.format("grund: %s", grund.toString()));
-		}
+		System.out.println("Notizen: " + getNotizen());
+		System.out.println("Gueltigkeit Pruefung: " + tageBisAbgelaufen);
+		System.out.println("Naechste Pruefung" + naechstepruefung);
 	}
 	
 	// Geräteinformationen in Textdatei exportieren.
 	public void drucken(PrintWriter printWriterinDatei) {
 		printWriterinDatei.println("Geraeteinformationen:");
-		printWriterinDatei.println("Geraetename: " + this.name);
-		printWriterinDatei.println("Pruefung Bestanden: " + this.pruefungBestanden);
-		if(!this.pruefungBestanden) {
-			printWriterinDatei.println("Grund: " + this.grund);
+		printWriterinDatei.println("Geraetename: " + name);
+		printWriterinDatei.println("Pruefung Bestanden: " + pruefungBestanden);
+		if(!pruefungBestanden) {
+			printWriterinDatei.println("Grund: " + getGrund());
 		}
-		printWriterinDatei.println("Gueltigkeit Pruefung: " + this.tageBisAbgelaufen);
-		printWriterinDatei.println("Naechste Pruefung" + this.naechstepruefung);
+		printWriterinDatei.println("Notizen: " + getNotizen());
+		printWriterinDatei.println("Gueltigkeit Pruefung: " + tageBisAbgelaufen);
+		printWriterinDatei.println("Naechste Pruefung" + naechstepruefung);
 	}
 	
 	public void setPruefungBestanden() {
