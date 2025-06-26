@@ -86,17 +86,17 @@ public class PrueferPanel extends JPanel
             			
             			try(PrintWriter printWriter = new PrintWriter(selectedFile)){ 		// braucht keinen extra filewriter, erstellt printwriter autom., wenn man ihm datei übergibt
         					aktuellesGeraet.drucken(printWriter);
-        					JOptionPane.showMessageDialog(null, "Geraet wurde erfolgreich in die ausgewählte Datei gedruckt.");
+        					JOptionPane.showMessageDialog(null, "Geraet wurde erfolgreich in die ausgewählte Datei gedruckt.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
         				
             			}
             			catch(Exception ex) {
-            				JOptionPane.showMessageDialog(null, "Druckvorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
+            				JOptionPane.showMessageDialog(null, "Druckvorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
             			}
             		}
                 } 
                 else 
                 {
-                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.", "Warnung", JOptionPane.WARNING_MESSAGE);
                 }
 
             }
@@ -141,18 +141,18 @@ public class PrueferPanel extends JPanel
                 				erfolg = true;
                 				aktuellesGeraet.setNotizen(kommentarArea.getText());
                 			}
-                			else JOptionPane.showMessageDialog(null, "Bitte Grund auswählen.");
+                			else JOptionPane.showMessageDialog(null, "Bitte Grund auswählen.", "Eingabe Fehlt", JOptionPane.WARNING_MESSAGE);
                 		}
                 	}
-                	else JOptionPane.showMessageDialog(null, "Bitte den Prüfstatus setzen.");
+                	else JOptionPane.showMessageDialog(null, "Bitte den Prüfstatus setzen.", "Eingabe Fehlt", JOptionPane.WARNING_MESSAGE);
                 } 
                 else 
                 {
-                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.", "Warnung", JOptionPane.WARNING_MESSAGE);
                 }
                 if (erfolg) {
                 	scrollPanePanel.updateListModel();
-                    JOptionPane.showMessageDialog(null, "Gerät erfolgreich Dokumentiert");
+                    JOptionPane.showMessageDialog(null, "Gerät erfolgreich Dokumentiert", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
                     resetPruefungsPanel();
                 }
             }
@@ -240,7 +240,7 @@ public class PrueferPanel extends JPanel
 	    {
 	        if (aktuellesGeraet == null) 
 	        {
-	            JOptionPane.showMessageDialog(null, "Bitte erst ein Gerät auswählen.");
+	            JOptionPane.showMessageDialog(null, "Bitte erst ein Gerät auswählen.", "Warnung", JOptionPane.WARNING_MESSAGE);
 	            pruefBestanden.setSelected(false);
 	            pruefNichtBestanden.setSelected(false);
 	            this.ausgewaehlterGrundIndex = -1;

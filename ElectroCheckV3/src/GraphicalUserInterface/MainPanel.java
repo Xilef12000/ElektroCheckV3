@@ -144,8 +144,7 @@ public class MainPanel extends JPanel
 	    aboutUs.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
-	    		JOptionPane.showMessageDialog(null, "Gruppe: \nN. Bachmann \nV. Bahatyani \nM. Baron \nM. König \nN.Weigold\n"
-	    											+"Semester: SS25");
+	    		JOptionPane.showMessageDialog(null, "Created for Lecture Softwarengineering\nHTWG - Hochschule Konstanz\nSommer Semester 2025\nContributors: \nN. Bachmann \nV. Bahatyani \nM. Baron \nM. König \nN.Weigold\n", "About Us", JOptionPane.INFORMATION_MESSAGE);
 	    	}
 	    }
 	    );
@@ -154,8 +153,7 @@ public class MainPanel extends JPanel
 	    aboutSoftware.addActionListener(new ActionListener() {
 	    	@Override
             public void actionPerformed(ActionEvent e) {
-	    		JOptionPane.showMessageDialog(null, "Software: ElektroCheckV3"
-						+"\nDatum: 18.06.2025");
+	    		JOptionPane.showMessageDialog(null, "ElektroCheckV3\nJuni 2025", "About Software", JOptionPane.INFORMATION_MESSAGE);
 	    	}
 	    }
 	    );
@@ -203,10 +201,10 @@ public class MainPanel extends JPanel
 			try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(choosedFile))){  
 				//Geraete abspeicher
 				oos.writeObject(geraeteList);
-				JOptionPane.showMessageDialog(this, "Tests wurde erfolgreich gespeichert.");
+				JOptionPane.showMessageDialog(this, "Tests wurde erfolgreich gespeichert.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
 			}
 			catch(Exception ex){
-				JOptionPane.showMessageDialog(this, "Speichervogang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
+				JOptionPane.showMessageDialog(this, "Speichervogang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 			
@@ -233,10 +231,10 @@ public class MainPanel extends JPanel
 				else if (userPanel instanceof VerwalterPanel) {
 					((VerwalterPanel) userPanel).scrollPanePanel.updateListModel();
 				}
-	            JOptionPane.showMessageDialog(this, "Tests wurde erfolgreich geladen.");
+	            JOptionPane.showMessageDialog(this, "Tests wurde erfolgreich geladen.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
 			}
 			catch(Exception ex){
-				JOptionPane.showMessageDialog(this, "Ladevorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
+				JOptionPane.showMessageDialog(this, "Ladevorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

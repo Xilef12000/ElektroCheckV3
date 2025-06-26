@@ -96,17 +96,17 @@ public class VerwalterPanel extends JPanel
             			
             			try(PrintWriter printWriter = new PrintWriter(selectedFile)){ 		// braucht keinen extra filewriter, erstellt printwriter autom., wenn man ihm datei übergibt
         					aktuellesGeraet.drucken(printWriter);
-        					JOptionPane.showMessageDialog(null, "Geraet wurde erfolgreich in die ausgewählte Datei gedruckt.");
+        					JOptionPane.showMessageDialog(null, "Geraet wurde erfolgreich in die ausgewählte Datei gedruckt.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
         				
             			}
             			catch(Exception ex) {
-            				JOptionPane.showMessageDialog(null, "Druckvorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage());
+            				JOptionPane.showMessageDialog(null, "Druckvorgang fehlgeschlagen, bitte versuchen Sie es erneut!" + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
             			}
             		}
                 } 
                 else 
                 {
-                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.", "Warnung", JOptionPane.WARNING_MESSAGE);
                 }
 
             }
@@ -137,7 +137,7 @@ public class VerwalterPanel extends JPanel
                 } 
                 else 
                 {
-                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
+                	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.", "Warnung", JOptionPane.WARNING_MESSAGE);
                 }
 
             }
@@ -249,7 +249,7 @@ public class VerwalterPanel extends JPanel
             	}
             	else 
                 {
-                	JOptionPane.showMessageDialog(null, "Bitte Gerätenamen eingeben.");
+                	JOptionPane.showMessageDialog(null, "Bitte Gerätenamen eingeben.", "Eingabe Fehlt", JOptionPane.WARNING_MESSAGE);
                 }
             }
         };
