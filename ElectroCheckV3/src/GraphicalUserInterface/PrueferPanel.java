@@ -11,6 +11,7 @@ public class PrueferPanel extends JPanel
 {
 	private MainPanel mainPanel;
 	private JList<Geraet> geraetJList;
+	private JPanel pruefungsPanel;
 	private JPanel statusPanel;
 	protected Geraet aktuellesGeraet;
 	public ScrollPanePanel scrollPanePanel;
@@ -18,6 +19,8 @@ public class PrueferPanel extends JPanel
 	private JLabel schutzklasse;
 	private int ausgewaehlterGrundIndex = -1;
 	private int pruefstatus = 0;
+	private JCheckBox pruefBestanden;
+	private JCheckBox pruefNichtBestanden;
 
 	public PrueferPanel(MainPanel mainPanel) 
 	{
@@ -107,29 +110,39 @@ public class PrueferPanel extends JPanel
         {
             @Override
             public void actionPerformed(ActionEvent e) 
-            {                
+            {
+            	Boolean erfolg = false;
                 if (aktuellesGeraet != null) 
                 {
-                	if(PrueferPanel.this.aktuellesGeraet != null && PrueferPanel.this.pruefstatus != 0) 
-                	{                		                	
-	                	switch(PrueferPanel.this.ausgewaehlterGrundIndex) 
-	                	{
-	                		case -1: aktuellesGeraet.setPruefungBestanden(); break;
-	                		
-	                		case 0: aktuellesGeraet.setPruefungNichtBestanden(0); break;
-	                		
-	                		case 1: aktuellesGeraet.setPruefungNichtBestanden(1); break;
-	                		
-	                		case 2: aktuellesGeraet.setPruefungNichtBestanden(2); break;
-	                		
-	                		case 3: aktuellesGeraet.setPruefungNichtBestanden(3); break;
-	                		
-	                		case 4: aktuellesGeraet.setPruefungNichtBestanden(4); break;
-	                		
-	                		case 5: aktuellesGeraet.setPruefungNichtBestanden(5); break;
-	                		
-	                		case 6: aktuellesGeraet.setPruefungNichtBestanden(6); break;	                			                		
-	                	}
+                	if(PrueferPanel.this.aktuellesGeraet != null && pruefstatus != 0) 
+                	{    
+                		if(pruefstatus == 1) {
+                			aktuellesGeraet.setPruefungBestanden();
+                			erfolg = true;
+                		}
+                		else{
+                			if (ausgewaehlterGrundIndex != -1) {
+                				switch(ausgewaehlterGrundIndex) 
+        	                	{
+        	                		case -1:
+        	                		case 0: aktuellesGeraet.setPruefungNichtBestanden(0); break;
+        	                		
+        	                		case 1: aktuellesGeraet.setPruefungNichtBestanden(1); break;
+        	                		
+        	                		case 2: aktuellesGeraet.setPruefungNichtBestanden(2); break;
+        	                		
+        	                		case 3: aktuellesGeraet.setPruefungNichtBestanden(3); break;
+        	                		
+        	                		case 4: aktuellesGeraet.setPruefungNichtBestanden(4); break;
+        	                		
+        	                		case 5: aktuellesGeraet.setPruefungNichtBestanden(5); break;
+        	                		
+        	                		case 6: aktuellesGeraet.setPruefungNichtBestanden(6); break;	                			                		
+        	                	}
+                				erfolg = true;
+                			}
+                			else JOptionPane.showMessageDialog(null, "Bitte Grund auswählen.");
+                		}
                 	}
                 	else JOptionPane.showMessageDialog(null, "Bitte den Prüfstatus setzen.");
                 } 
@@ -137,7 +150,21 @@ public class PrueferPanel extends JPanel
                 {
                 	JOptionPane.showMessageDialog(null, "Bitte ein Gerät auswählen.");
                 }
-
+                if (erfolg) {
+                	scrollPanePanel.updateListModel();
+                    JOptionPane.showMessageDialog(null, "Gerät erfolgreich Dokumentiert");
+                    pruefungsPanel.setVisible(false);
+                    pruefBestanden.setSelected(false);
+                    pruefNichtBestanden.setSelected(false);
+                    statusPanel.removeAll();
+                    JPanel gesamtPanel = new JPanel();
+            	    gesamtPanel.setLayout(new BorderLayout(10, 10));
+            	    gesamtPanel.setBackground(Color.WHITE);
+            	    statusPanel.add(gesamtPanel, BorderLayout.CENTER);
+            	    statusPanel.revalidate();
+            	    statusPanel.repaint();
+            	    pruefstatus = 0;
+                }
             }
         };
         pruefungDokButton.addActionListener(pruefungDokAL);         
@@ -155,7 +182,8 @@ public class PrueferPanel extends JPanel
 	    dokuPanel.add(dokuUebersicht, BorderLayout.NORTH);
 
 	    //Hauptbereich für Prüfungsinformationen
-	    JPanel pruefungsPanel = new JPanel();
+	    pruefungsPanel = new JPanel();
+	    pruefungsPanel.setVisible(false);
 	    pruefungsPanel.setLayout(new BoxLayout(pruefungsPanel, BoxLayout.Y_AXIS));
 	    pruefungsPanel.setBackground(Color.WHITE);
 
@@ -188,8 +216,8 @@ public class PrueferPanel extends JPanel
 	    JPanel pruefStatus = new JPanel();
 	    pruefStatus.setLayout(new FlowLayout(FlowLayout.LEFT));
 	    pruefStatus.setBackground(Color.WHITE);
-	    JCheckBox pruefBestanden = new JCheckBox("Prüfung bestanden");
-	    JCheckBox pruefNichtBestanden = new JCheckBox("Prüfung nicht bestanden");
+	    pruefBestanden = new JCheckBox("Prüfung bestanden");
+	    pruefNichtBestanden = new JCheckBox("Prüfung nicht bestanden");
 
 	    pruefBestanden.setBackground(Color.WHITE);
 	    pruefNichtBestanden.setBackground(Color.WHITE);
@@ -347,6 +375,7 @@ public class PrueferPanel extends JPanel
 		{
 		    ausgewaehltesGeraet.setText("Ausgewähltes Gerät: " + aktuellesGeraet.getName());
 		    schutzklasse.setText("Geräteschutzklasse: " + aktuellesGeraet.getSchutzklasse());
+		    pruefungsPanel.setVisible(true);
 		}
 	}
 }
