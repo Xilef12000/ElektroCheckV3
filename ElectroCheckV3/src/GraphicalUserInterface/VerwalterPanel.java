@@ -119,18 +119,7 @@ public class VerwalterPanel extends JPanel
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-            	scrollPanePanel.clearSelection();
-            	nameField.setText("");
-    			nameField.setEnabled(true);
-    			daysField.setValue(365);
-    			daysField.setEnabled(true);
-    			geraeteTypenBox.setEnabled(true);
-    			geraeteTypenBox.setSelectedIndex(0);
-    			submitExitPanel.setVisible(true);
-    			erstellenButton.setEnabled(true);
-    			abbrechenButton.setEnabled(true);
-    			
-    			eigenschaftenPanel.setVisible(false);
+            	resetPanel();
             }
         };
         geraetAnlegen.addActionListener(geraetAnlegenAL);
@@ -256,6 +245,7 @@ public class VerwalterPanel extends JPanel
                 		mainPanel.addGeraet(new Geraet_SK3(nameField.getText(), true, (int) daysField.getValue()));
                 	}
                 	scrollPanePanel.updateListModel();
+                	resetPanel();
             	}
             	else 
                 {
@@ -291,9 +281,21 @@ public class VerwalterPanel extends JPanel
 			bestandenBox.setSelected(aktuellesGeraet.getPruefungBestanden());
 			grundText.setText(aktuellesGeraet.getGrund());
 			naechstePText.setText(aktuellesGeraet.getNaechstepruefung().format(DateTimeFormatter.ofPattern("dd-MMM-yy")));
-			System.out.println(aktuellesGeraet.getNaechstepruefung().toString());
 			kommentarArea.setText(aktuellesGeraet.getNotizen());
 			eigenschaftenPanel.setVisible(true);
 		}
+	}
+	private void resetPanel() {
+		scrollPanePanel.clearSelection();
+    	nameField.setText("");
+		nameField.setEnabled(true);
+		daysField.setValue(365);
+		daysField.setEnabled(true);
+		geraeteTypenBox.setEnabled(true);
+		geraeteTypenBox.setSelectedIndex(0);
+		submitExitPanel.setVisible(true);
+		erstellenButton.setEnabled(true);
+		abbrechenButton.setEnabled(true);
+		eigenschaftenPanel.setVisible(false);
 	}
 }

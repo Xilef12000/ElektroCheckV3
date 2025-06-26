@@ -9,8 +9,6 @@ import java.util.List;
 
 public class PrueferPanel extends JPanel
 {
-	private MainPanel mainPanel;
-	private JList<Geraet> geraetJList;
 	private JPanel pruefungsPanel;
 	private JPanel statusPanel;
 	protected Geraet aktuellesGeraet;
@@ -25,7 +23,6 @@ public class PrueferPanel extends JPanel
 
 	public PrueferPanel(MainPanel mainPanel) 
 	{
-		this.mainPanel = mainPanel;
 		
 		//Definiere Layout
 		this.setLayout(new BorderLayout());
@@ -115,7 +112,7 @@ public class PrueferPanel extends JPanel
             	Boolean erfolg = false;
                 if (aktuellesGeraet != null) 
                 {
-                	if(PrueferPanel.this.aktuellesGeraet != null && pruefstatus != 0) 
+                	if(aktuellesGeraet != null && pruefstatus != 0) 
                 	{    
                 		if(pruefstatus == 1) {
                 			aktuellesGeraet.setPruefungBestanden();
@@ -335,7 +332,6 @@ public class PrueferPanel extends JPanel
 	        radioButton.addActionListener(e -> 
 	        {
 	            this.ausgewaehlterGrundIndex = index;
-	            System.out.println("Ausgewählter Grund: " + index);
 	        });
 
 	        buttonGroup.add(radioButton);

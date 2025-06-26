@@ -15,13 +15,7 @@ public class MainPanel extends JPanel
 	private JPanel userPanel;
 	
 	public MainPanel() 
-	{
-		//Zu testzwecken LÖSCHEN!!
-		Geraet testGeraet = new Geraet_SK1("Test Gerät", true, 100);
-		geraeteList.add(testGeraet); // testgerät, to be deleted
-		testGeraet.setPruefungNichtBestanden(2);
-		System.out.println(testGeraet.getGrund());
-		
+	{	
 		//Layout setzten
 		this.setLayout(new BorderLayout());
 		
@@ -70,16 +64,16 @@ public class MainPanel extends JPanel
 	    	@Override
             public void actionPerformed(ActionEvent e) { 
 	    		//Aktuelles Panel in MainPanel BorderLayout(CENTER)
-	    		Component centerComp =  ((BorderLayout) MainPanel.this.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+	    		Component centerComp =  ((BorderLayout) getLayout()).getLayoutComponent(BorderLayout.CENTER);
 	    		if (centerComp != null && centerComp instanceof JPanel) {
 	    	        JPanel deletePanel = (JPanel) centerComp;
-	    	        MainPanel.this.remove(deletePanel);
+	    	        remove(deletePanel);
 	    	    }
 	    		//Center mit PrueferPanel überschreiben 
 	    		userPanel = new PrueferPanel(MainPanel.this);
-	    		MainPanel.this.add(userPanel, BorderLayout.CENTER);
-	    		MainPanel.this.revalidate();
-	    	    MainPanel.this.repaint();
+	    		add(userPanel, BorderLayout.CENTER);
+	    		revalidate();
+	    	    repaint();
 	    	}
 	    }
 	    );
@@ -89,15 +83,15 @@ public class MainPanel extends JPanel
 	    	@Override
             public void actionPerformed(ActionEvent e) {
 	    		//Aktuelles Panel in MainPanel BorderLayout(CENTER)
-	    		Component centerComp =  ((BorderLayout) MainPanel.this.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+	    		Component centerComp =  ((BorderLayout) getLayout()).getLayoutComponent(BorderLayout.CENTER);
 	    		if (centerComp != null && centerComp instanceof JPanel) {
 	    	        JPanel deletePanel = (JPanel) centerComp;
-	    	        MainPanel.this.remove(deletePanel);
+	    	        remove(deletePanel);
 	    	    }
 	    		userPanel = new VerwalterPanel(MainPanel.this);
-	    		MainPanel.this.add(userPanel, BorderLayout.CENTER);
-	    		MainPanel.this.revalidate();
-	    	    MainPanel.this.repaint();
+	    		add(userPanel, BorderLayout.CENTER);
+	    		revalidate();
+	    	    repaint();
 	    	}
 	    }
 	    );
