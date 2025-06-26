@@ -50,7 +50,19 @@ public abstract class Geraet implements Serializable{
 	
 	
 	public String toString() {
-		return name + " - SK" + schutzklasse;
+		String ret = name + " - SK" + schutzklasse;
+		if (pruefungBestanden) {
+			if (LocalDateTime.now().isAfter(naechstepruefung)) {
+				ret += " - ⚠";
+			}
+			else {
+				ret += " - ✔";
+			}
+		}
+		else {
+			ret += " - ✘";
+		}
+		return ret;
 	}
 	
 	public String getSchutzklasse() {

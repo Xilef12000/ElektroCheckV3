@@ -187,7 +187,7 @@ public class VerwalterPanel extends JPanel
 		daysPanel.setLayout(new BorderLayout());
 		basicInfoPanel.add(daysPanel);
 		JLabel daysLabel = new JLabel("Gültichkeit Prüfung (in Tagen): ");
-		daysField = new JSpinner(new SpinnerNumberModel(365, 1, 730, 1));
+		daysField = new JSpinner(new SpinnerNumberModel(365, 0, 730, 1));
 		daysPanel.add(daysLabel, BorderLayout.WEST);
 		daysPanel.add(daysField, BorderLayout.CENTER);
 		
