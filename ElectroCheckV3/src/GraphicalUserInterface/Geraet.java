@@ -42,7 +42,10 @@ public abstract class Geraet implements Serializable{
 	}
 	
 	public String getGrund() {
-		return grund.toString();
+		if (grund != null) {
+			return grund.toString();
+		}
+		return "";
 	}
 	
 	

@@ -280,7 +280,7 @@ public class VerwalterPanel extends JPanel
 			erstellenButton.setEnabled(false);
 			abbrechenButton.setEnabled(false);
 			bestandenBox.setSelected(aktuellesGeraet.getPruefungBestanden());
-			grundText.setText(aktuellesGeraet.getName());
+			grundText.setText(aktuellesGeraet.getGrund());
 			naechstePText.setText(aktuellesGeraet.getNaechstepruefung().format(DateTimeFormatter.ofPattern("dd-MMM-yy")));
 			System.out.println(aktuellesGeraet.getNaechstepruefung().toString());
 			eigenschaftenPanel.setVisible(true);
