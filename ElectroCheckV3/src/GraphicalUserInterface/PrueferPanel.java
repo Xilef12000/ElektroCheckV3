@@ -123,19 +123,20 @@ public class PrueferPanel extends JPanel
                 				switch(ausgewaehlterGrundIndex) 
         	                	{
         	                		case -1:
-        	                		case 0: aktuellesGeraet.setPruefungNichtBestanden(0); break;
+        	                		case 0:
+        	                		case 1: aktuellesGeraet.setPruefungNichtBestanden(0); break;
         	                		
-        	                		case 1: aktuellesGeraet.setPruefungNichtBestanden(1); break;
+        	                		case 2: aktuellesGeraet.setPruefungNichtBestanden(1); break;
         	                		
-        	                		case 2: aktuellesGeraet.setPruefungNichtBestanden(2); break;
+        	                		case 3: aktuellesGeraet.setPruefungNichtBestanden(2); break;
         	                		
-        	                		case 3: aktuellesGeraet.setPruefungNichtBestanden(3); break;
+        	                		case 4: aktuellesGeraet.setPruefungNichtBestanden(3); break;
         	                		
-        	                		case 4: aktuellesGeraet.setPruefungNichtBestanden(4); break;
+        	                		case 5: aktuellesGeraet.setPruefungNichtBestanden(4); break;
         	                		
-        	                		case 5: aktuellesGeraet.setPruefungNichtBestanden(5); break;
+        	                		case 6: aktuellesGeraet.setPruefungNichtBestanden(5); break;
         	                		
-        	                		case 6: aktuellesGeraet.setPruefungNichtBestanden(6); break;	                			                		
+        	                		case 7: aktuellesGeraet.setPruefungNichtBestanden(6); break;	                			                		
         	                	}
                 				erfolg = true;
                 				aktuellesGeraet.setNotizen(kommentarArea.getText());
