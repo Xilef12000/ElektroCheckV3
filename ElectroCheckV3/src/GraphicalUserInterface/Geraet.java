@@ -41,6 +41,11 @@ public abstract class Geraet implements Serializable{
 		return tageBisAbgelaufen;
 	}
 	
+	public String getGrund() {
+		return grund.toString();
+	}
+	
+	
 	public String toString() {
 		return name + " - SK" + schutzklasse;
 	}
@@ -86,7 +91,7 @@ public abstract class Geraet implements Serializable{
 		//	- setze 'naechstepruefung' auf Aktuelles Datum + 'tageBisAbgelaufen' Tage
 		pruefungBestanden = true;
 		naechstepruefung = LocalDateTime.now().plusDays(tageBisAbgelaufen);
-		this.grund = null;
+		grund = null;
 	}
 	
 	public void setPruefungNichtBestanden(int grundi) {

@@ -52,6 +52,7 @@ public class ScrollPanePanel extends JPanel {
             {
             	if (parentPanel instanceof PrueferPanel) {
 					((PrueferPanel) parentPanel).aktuellesGeraet = geraetJList.getSelectedValue();
+					((PrueferPanel) parentPanel).aktualisierePanel();
 				}
 				else if (parentPanel instanceof VerwalterPanel) {
 					((VerwalterPanel) parentPanel).aktuellesGeraet = geraetJList.getSelectedValue();
